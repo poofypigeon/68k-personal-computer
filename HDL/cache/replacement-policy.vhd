@@ -44,7 +44,7 @@ architecture prioritize_invalid_blocks_arch of prioritize_invalid_blocks is
 begin
     process(block_valid_bits)                               -- reevaluate if the valid blocks change
     begin
-        block_to_replace_s <= "0000000000000000";
+        block_to_replace_s <= x"0000";                      -- set all bits to '0'
         for i in 0 to (block_valid_bits'length - 1) loop    -- look at all of the blocks' valid-bits in order
             if i = 0  then                                  -- [first bit only]
                 if (block_valid_bits(i) = '0') then           -- if the first bit isn't valid, then fill it
@@ -64,10 +64,10 @@ begin
         end loop;
     end process;
 
-    all_blocks_valid <= '1' when block_to_replace_s = "0000000000000000" else
-        '0';
+    all_blocks_valid <= '1' when block_to_replace_s = x"0000" -- when all bits are '0'
+                        else '0';
     block_to_replace <= block_to_replace_s;
-    
+
 end prioritize_invalid_blocks_arch;
 
 ------------------------------
