@@ -21,15 +21,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 -------------------------------------------------------------------------------
--- This is the first method for assigning tags to cache blocks. It takes 
--- precedence when there exist blocks that do not have their valid-bit set,
--- and thus is responsible for the order in which blocks become valid.
--- Becuase of the paginated nature of the memory the cache refers to, validity
--- will only neet to be reset for an entire set of blocks at once. This is
--- crucial because it means we can define the behaviour of this component
--- with the knowledge that the valid blocks in a set can never be fragmented
--- if the validity of blocks is set in fixed order, allowing this component
--- to have a relatively simple cascading flow.
+-- This is the first stage for assigning tags to cache blocks. It takes 
+-- precedence when there are blocks that do not have their valid-bit set,
+-- and it is responsible for the order in which blocks become valid. Becuase
+-- validity can only be reset for an entire set of blocks at once, the behaviour
+-- of this component can be defined with the knowledge that the valid blocks
+-- in a set can never be fragmented if tags are assigned to blocks in a fixed
+-- order. This allows this component to have a simple cascading flow.
 -------------------------------------------------------------------------------
 entity prioritize_invalid_blocks is
     port(
