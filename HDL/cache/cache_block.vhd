@@ -28,9 +28,8 @@ entity cache_block is
         clk         : in  std_logic; -- clock
         set_select  : in  std_logic; -- tag belongs to set containing blocks
         replace_en  : in  std_logic; -- block selected by replacement policy
-        tag_query   : in  std_logic vector (7 downto 0); -- tag of requested address
-        tag_assert  : out std_logic_vector (7 downto 0); -- buffered tag output on cache hit
-        hit   : out std_logic; -- block is reporting a cache hit
+        tag         : in  std_logic vector (7 downto 0); -- tag of requested address
+        hit         : out std_logic; -- block is reporting a cache hit
         valid       : out std_logic; -- block contains valid data
         reset       : in  std_logic  -- mark set tags invalid
     );
@@ -55,18 +54,16 @@ begin
     tag_register : register_8bit port map (
         clk => clk,
         en  => replace_en,  -- data in enable is controlled by replacement policy
-        d   => tag_query,   
+        d   => tag,   
         q   => stored
     );
 
     valid   <=  valid_s;
     hit     <=  hit_s;
 
-    match       <=  '1' when tag_query = stored  -- does the tag query match stored tag
+    match       <=  '1' when tag = stored  -- does the tag query match stored tag
                     else '0';
     hit_s       <=  match and set_select and valid_s;     -- report a cache hit
-    tag_assert  <=  stored when hit_s = '1' -- block will output to tag bus only when reporting a hit
-                    else 'Z';
 
     set_valid : process(clk, reset)
     begin
