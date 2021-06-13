@@ -20,33 +20,54 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+-------------------------------------------------------------------------------
+-- This is the first method for assigning tags to cache blocks. It takes 
+-- precedence when there exist blocks that do not have their valid-bit set,
+-- and thus is responsible for the order in which blocks become valid.
+-- Becuase of the paginated nature of the memory the cache refers to, validity
+-- will only neet to be reset for an entire set of blocks at once. This is
+-- crucial because it means we can define the behaviour of this component
+-- with the knowledge that the valid blocks in a set can never be fragmented
+-- if the validity of blocks is set in fixed order, allowing this component
+-- to have a relatively simple cascading flow.
+-------------------------------------------------------------------------------
 entity prioritize_invalid_blocks is
     port(
-        block_valid_bits  : in  std_logic_vector(0 to 15);
-        block_to_replace  : out std_logic_vector(0 to 15)
+        all_blocks_valid : out std_logic;
+        block_valid_bits : in  std_logic_vector(0 to 15);
+        block_to_replace : out std_logic_vector(0 to 15)
     );
 end prioritize_invalid_blocks;
 
 architecture prioritize_invalid_blocks_arch of prioritize_invalid_blocks is
+    signal block_to_replace_s : std_logic_vector(0 to 15);
 begin
-    process(block_valid_bits)
+    process(block_valid_bits)                               -- reevaluate if the valid blocks change
     begin
-        for i in 0 to (block_valid_bits'length - 1) loop
-            if i = 0  then
-                if (block_valid_bits(i) = '0') then
-                    block_to_replace(i) <= '1';
+        block_to_replace_s <= "0000000000000000";
+        for i in 0 to (block_valid_bits'length - 1) loop    -- look at all of the blocks' valid-bits in order
+            if i = 0  then                                  -- [first bit only]
+                if (block_valid_bits(i) = '0') then           -- if the first bit isn't valid, then fill it
+                    block_to_replace_s(i) <= '1';
                 else
-                    block_to_replace(i) <= '0';
+                    block_to_replace_s(i) <= '0';
                 end if;
-            else
-                if (block_valid_bits(i - 1) = '1') and (block_valid_bits(i) = '0') then
-                    block_to_replace(i) <= '1';
+            
+            else                                            -- [all other bits]
+                if  (block_valid_bits(i - 1) = '1')           -- if the previous block is valid, but this one
+                and (block_valid_bits(i) = '0') then        -- isn't, then this block is next to be filled.
+                    block_to_replace_s(i) <= '1';
                 else
-                    block_to_replace(i) <= '0';
+                    block_to_replace_s(i) <= '0';
                 end if;
             end if;
         end loop;
     end process;
+
+    all_blocks_valid <= '1' when block_to_replace_s = "0000000000000000" else
+        '0';
+    block_to_replace <= block_to_replace_s;
+    
 end prioritize_invalid_blocks_arch;
 
 ------------------------------
