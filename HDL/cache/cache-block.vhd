@@ -2,12 +2,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+-- TODO : move to library with generics
 entity register_8bit is
     port (
         clk : in  std_logic; -- clock
         en  : in  std_logic; -- data input enable
-        d   : in  std_logic_vector (7 downto 0); -- data in
-        q   : out std_logic_vector (7 downto 0)  -- data out
+        d   : in  std_logic_vector(7 downto 0); -- data in
+        q   : out std_logic_vector(7 downto 0)  -- data out
     );
 end register_8bit;
 
@@ -23,6 +24,7 @@ begin
     end process try_latch;
 end register_8bit_arch;
 
+------------------------------
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -30,13 +32,13 @@ use ieee.numeric_std.all;
 
 entity cache_block is
     port (
-        clk         : in  std_logic; -- clock
-        set_select  : in  std_logic; -- tag belongs to set containing blocks
-        replace_en  : in  std_logic; -- block selected by replacement policy
-        tag         : in  std_logic_vector (7 downto 0); -- tag of requested address
-        hit         : out std_logic; -- block is reporting a cache hit
-        valid       : out std_logic; -- block contains valid data
-        reset       : in  std_logic  -- mark set tags invalid
+        clk             : in  std_logic; -- clock
+        set_is_selected : in  std_logic; -- tag belongs to set containing blocks
+        replace_en      : in  std_logic; -- block selected by replacement policy
+        reset           : in  std_logic  -- mark set tags invalid
+        hit             : out std_logic; -- block is reporting a cache hit
+        valid           : out std_logic; -- block contains valid data
+        tag             : in  std_logic_vector(7 downto 0); -- tag of requested address
     );
 end cache_block;
 
@@ -45,12 +47,12 @@ architecture cache_block_arch of cache_block is
         port (
             clk : in  std_logic;
             en  : in  std_logic;
-            d   : in  std_logic_vector (7 downto 0);
-            q   : out std_logic_vector (7 downto 0)
+            d   : in  std_logic_vector(7 downto 0);
+            q   : out std_logic_vector(7 downto 0)
         );
     end component;
 
-    signal stored   : std_logic_vector (7 downto 0);
+    signal stored   : std_logic_vector(7 downto 0);
     signal match    : std_logic;
     signal hit_s    : std_logic;
     signal valid_s  : std_logic;
@@ -66,9 +68,9 @@ begin
     valid   <=  valid_s;
     hit     <=  hit_s;
     
-    match   <=  '1' when tag = stored  -- does the tag query match stored tag
-                else '0';
-    hit_s   <=  match and set_select and valid_s; -- report a cache hit
+    match   <=  '1' when tag = stored else -- does the tag query match stored tag
+                '0';
+    hit_s   <=  match and set_is_selected and valid_s; -- report a cache hit
 
     set_valid : process(clk, reset)
     begin

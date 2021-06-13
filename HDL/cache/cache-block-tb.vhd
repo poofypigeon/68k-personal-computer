@@ -10,28 +10,28 @@ architecture tb of cache_block_tb is
 
     component cache_block
         port (
-            clk         : in  std_logic;
-            set_select  : in  std_logic;
-            replace_en  : in  std_logic;
-            tag         : in  std_logic_vector (7 downto 0);
-            hit         : out std_logic;
-            valid       : out std_logic;
-            reset       : in  std_logic
+            clk             : in  std_logic;
+            set_is_selected : in  std_logic;
+            replace_en      : in  std_logic;
+            reset           : in  std_logic
+            hit             : out std_logic;
+            valid           : out std_logic;
+            tag             : in  std_logic_vector(7 downto 0);
         );
     end component;
 
-    signal  clk         : std_logic;
-    signal  set_select  : std_logic;
-    signal  replace_en  : std_logic;
-    signal  tag         : std_logic_vector (7 downto 0);
-    signal  hit         : std_logic;
-    signal  valid       : std_logic;
-    signal  reset       : std_logic;
+    signal  clk             : std_logic;
+    signal  set_is_selected : std_logic;
+    signal  replace_en      : std_logic;
+    signal  hit             : std_logic;
+    signal  valid           : std_logic;
+    signal  reset           : std_logic;
+    signal  tag             : std_logic_vector(7 downto 0);
 
 begin
     UUT: cache_block port map(
         clk, 
-        set_select, 
+        set_is_selected, 
         replace_en, 
         tag, 
         hit, 
@@ -64,13 +64,13 @@ begin
         report "Failed to set valid bit." severity error;
 
         -- assert that hit is not reported if set is not selected
-        set_select <= '0';
+        set_is_selected <= '0';
         wait for period;
         assert(hit = '0')
         report "Failed to miss with set not selected." severity error;
 
         -- assert that hit is reported when all conditions are met
-        set_select <= '1';
+        set_is_selected <= '1';
         wait for period;
         assert(hit = '1')
         report "Failed to register hit." severity error;
