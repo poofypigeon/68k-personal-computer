@@ -66,9 +66,9 @@ begin
     valid   <=  valid_s;
     hit     <=  hit_s;
     
-    match       <=  '1' when tag = stored  -- does the tag query match stored tag
-                    else '0';
-    hit_s       <=  match and set_select and valid_s; -- report a cache hit
+    match   <=  '1' when tag = stored  -- does the tag query match stored tag
+                else '0';
+    hit_s   <=  match and set_select and valid_s; -- report a cache hit
 
     set_valid : process(clk, reset)
     begin
