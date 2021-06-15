@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity prioritize_invalid_blocks_tb is
+
 end prioritize_invalid_blocks_tb;
 
 architecture prioritize_invalid_blocks_tb_arch of prioritize_invalid_blocks_tb is
@@ -20,11 +21,16 @@ architecture prioritize_invalid_blocks_tb_arch of prioritize_invalid_blocks_tb i
     signal block_valid_bits : std_logic_vector(0 to 15);
     signal block_to_replace : std_logic_vector(0 to 15);
 begin
-    UUT : prioritize_invalid_blocks port map (all_blocks_valid, block_valid_bits, block_to_replace);
+    UUT : prioritize_invalid_blocks 
+        port map (
+            all_blocks_valid => all_blocks_valid, 
+            block_valid_bits => block_valid_bits, 
+            block_to_replace => block_to_replace
+        );
 
     process
     begin
-        block_valid_bits <= "0000000000000000";
+        block_valid_bits <= x"0000";
         wait for period;
 
         for i in 0 to 15 loop

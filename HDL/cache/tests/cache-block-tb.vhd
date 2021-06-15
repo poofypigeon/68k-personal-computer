@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity cache_block_tb is
+    
 end cache_block_tb;
 
 architecture tb of cache_block_tb is
@@ -29,15 +30,16 @@ architecture tb of cache_block_tb is
     signal  tag             : std_logic_vector(7 downto 0);
 
 begin
-    UUT: cache_block port map(
-        clk, 
-        set_is_selected, 
-        replace_en, 
-        tag, 
-        hit, 
-        valid, 
-        reset
-    );
+    UUT: cache_block 
+        port map(
+            clk             => clk, 
+            set_is_selected => set_is_selected, 
+            replace_en      => replace_en, 
+            tag             => tag, 
+            hit             => hit, 
+            valid           => valid, 
+            reset           => reset
+        );
 
     process
     begin
@@ -50,7 +52,7 @@ begin
 
         -- load tag "00001111" into register
         reset <= '0';
-        tag <= "00001111";
+        tag   <= "00001111";
         replace_en <= '1';
         -- clock pulse
         clk <= '0';
@@ -83,7 +85,7 @@ begin
 
         -- assert that valid bit resets correctly
         reset <= '1';
-        tag <= "00001111";
+        tag   <= "00001111";
         wait for period;
         assert(valid = '0')
         report "Failed to reset valid bit." severity error;
