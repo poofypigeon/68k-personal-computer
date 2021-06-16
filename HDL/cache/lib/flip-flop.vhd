@@ -20,7 +20,9 @@ architecture d_flip_flop_arch of d_flip_flop is
 begin
     load : process(clk)
     begin
-        q <= d when rising_edge(clk) and en;
+        if rising_edge(clk) and en = '1' then
+            q <= d;
+        end if;
     end process load;
 end d_flip_flop_arch;
 
@@ -32,11 +34,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --------------------------------------------------------------------------------
---  single T-flip-flop latch
---------------------------------------------------------------------------------
 entity t_flip_flop is
     generic (
-        initial : std_logic; -- initial state
+        initial : std_logic -- initial state
     );
 
     port (
@@ -51,14 +51,16 @@ architecture t_flip_flop_arch of t_flip_flop is
 begin
     toggle : process(clk)
     begin
-        q_s <= not q_s when rising_edge(clk) and t;
+        if rising_edge(clk) and t = '1' then
+            q_s <= not q_s;
+        end if;
     end process toggle;
     q <= q_s;
 end t_flip_flop_arch;
 
 
 --------------------------------------------------------------------------------
--- REGISTER
+-- D-TYPE REGISTER
 --------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -66,20 +68,20 @@ use ieee.numeric_std.all;
 --------------------------------------------------------------------------------
 -- variably sized register comprised of an array of D-flip-flops
 --------------------------------------------------------------------------------
-entity register is
+entity d_type_register is
     generic (
-        bit_count : positive;
+        bit_count : positive
     );
 
     port (
         clk : in  std_logic; -- clock
         en  : in  std_logic; -- input enable
-        d   : in  std_logic_vector(bits downto 0); -- data in
-        q   : out std_logic_vector(bits downto 0)  -- data out
+        d   : in  std_logic_vector(bit_count downto 0); -- data in
+        q   : out std_logic_vector(bit_count downto 0)  -- data out
     );
-end register;
+end d_type_register;
 
-architecture register_arch of register is
+architecture d_type_register_arch of d_type_register is
     component d_flip_flop
         port (
             clk : in  std_logic; -- clock
@@ -90,11 +92,11 @@ architecture register_arch of register is
     end component;
 begin
     build_array : for i in 0 to bit_count - 1 generate
-        register_bit : d_flip_flop port map (
+        array_bit : d_flip_flop port map (
             clk => clk,
             en  => en,
             d   => d(i), -- map flip-flop input to corresponding register input
             q   => q(i)  -- map flip-flop output to corresponding register output
         );
     end generate build_array;
-end register_arch;
+end d_type_register_arch;
