@@ -24,14 +24,14 @@ architecture t_flip_flop_tb_arch of t_flip_flop_tb is
         );
     end component;
 
-    signal clk : std_logic := '0'; -- clock begins low
-    signal t   : std_logic := '0'; -- t begins low
+    signal clk : std_logic := '0'; -- clock is initialized low
+    signal t   : std_logic := '0'; -- t is initialized to low
     signal q   : std_logic;
     
 begin
     UUT : t_flip_flop
         generic map (
-            initial => '0'
+            initial => '0' -- q is initialized to low
         )
         port map (
             clk => clk,
