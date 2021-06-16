@@ -46,14 +46,14 @@ begin
         q   => stored
     );
 
-    match <=   '1' when tag = stored -- does the tag query match stored tag
-          else '0';
+    match <= '1' when tag = stored -- does the tag query match stored tag
+        else '0';
     hit   <=   match and set_is_selected and valid_s; -- report a cache hit
 
     set_valid : process(clk, reset)
     begin
-        valid_s <=   '0' when reset 
-                else '1' when rising_edge(clk) and replace_en;
+        valid_s <= '0' when reset 
+              else '1' when rising_edge(clk) and replace_en;
     end process set_valid;
 
     valid <= valid_s;

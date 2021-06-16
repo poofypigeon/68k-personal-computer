@@ -29,19 +29,19 @@ begin
         for i in 0 to (valid_block_bits'length - 1) loop
             -- first bit
             if i = 0 then
-                block_to_replace_s(i) <=   '1' when not valid_block_bits(i)
-                                      else '0';
+                block_to_replace_s(i) <= '1' when not valid_block_bits(i)
+                                    else '0';
             -- other bits
             else            
-                block_to_replace_s(i) <=   '1' when valid_block_bits(i - 1) 
-                                               and not valid_block_bits(i) 
-                                      else '0';
+                block_to_replace_s(i) <= '1' when valid_block_bits(i - 1) 
+                                             and not valid_block_bits(i) 
+                                    else '0';
             end if;
         end loop;
     end process;
 
-    all_blocks_valid <=   '1' when block_to_replace_s = x"0000"
-                     else '0';
+    all_blocks_valid <= '1' when block_to_replace_s = x"0000"
+                   else '0';
     block_to_replace <= block_to_replace_s;
 
 end prioritize_invalid_arch;

@@ -43,11 +43,8 @@ begin
         variable i : integer := 0; -- initial value is '0'
     begin
         loop
-            if (i / 4) mod 2 = 0 then
-                t <= '1';
-            else
-                t <= '0';
-            end if;
+            t <= '1' when (i / 4) mod 2 = 0
+            else '0'; 
                 
             clk <= '1';
             wait for period / 2;
