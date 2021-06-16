@@ -18,11 +18,15 @@ end cache_block;
 
 architecture cache_block_arch of cache_block is
     component register
+        generic (
+            bit_count : positive;
+        );
+
         port (
             clk : in  std_logic;
             en  : in  std_logic;
-            d   : in  std_logic_vector(7 downto 0);
-            q   : out std_logic_vector(7 downto 0)
+            d   : in  std_logic_vector(bit_count downto 0);
+            q   : out std_logic_vector(bit_count downto 0)
         );
     end component;
 
@@ -31,7 +35,11 @@ architecture cache_block_arch of cache_block is
     signal valid_s  : std_logic := 0;
 
 begin
-    tag_register : register port map (
+    tag_register : 
+    generic  port map (
+        bit_count <= 8;
+    );
+    register port map (
         clk => clk,
         en  => replace_en,  -- data input enable is controlled by replacement policy
         d   => tag,   
