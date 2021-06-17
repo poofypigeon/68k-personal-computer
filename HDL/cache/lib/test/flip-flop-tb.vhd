@@ -42,31 +42,31 @@ begin
     -- clock generation
     clk <= not clk after period / 2;
 
-    process
+    tb : process
     begin
         -- initialization value test
-        wait for 0 ns;
+        wait for 0 ns; -- prevents error by allowing q to initialize
         assert q = '0'
-        report "failed: ""initialization value test""" severity error;
+        report "FAILED: ""initialization value test""" severity error;
 
         -- retain state on clock when t = '0'
         wait until falling_edge(clk);
         assert q = '0'
-        report "failed: ""retain state on clock when t = '0'""" severity error;
+        report "FAILED: ""retain state on clock when t = '0'""" severity error;
 
         -- set q <= '1' on clk when t = '1' and q = '0'
         t <= '1';
         wait until falling_edge(clk);
         assert q = '1'
-        report "failed: ""set q <= '1' on clk when t = '1' and q = '0'""" severity error;
+        report "FAILED: ""set q <= '1' on clk when t = '1' and q = '0'""" severity error;
 
         -- set q <= '0' on clk when t = '1' and q = '1'
         wait until falling_edge(clk);
         assert q = '0'
-        report "failed: ""set q <= '0' on clk when t = '1' and q = '1'""" severity error;
+        report "FAILED: ""set q <= '0' on clk when t = '1' and q = '1'""" severity error;
 
         -- finish test
         t <= '0';
         wait;
-    end process;
+    end process tb;
 end t_flip_flop_tb_arch;

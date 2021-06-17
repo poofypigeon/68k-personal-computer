@@ -52,9 +52,11 @@ begin
 
     set_valid : process(clk, reset)
     begin
-        if 
-        valid_s <= '0' when reset 
-              else '1' when rising_edge(clk) and replace_en;
+        if reset = '1'
+            valid_s <= '0';
+        elsif rising_edge(clk) and replace_en = '1'
+            valid_s <= '1';
+        end if
     end process set_valid;
 
     valid <= valid_s;
