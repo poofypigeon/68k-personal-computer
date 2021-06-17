@@ -29,17 +29,23 @@ begin
         for i in 0 to (valid_block_bits'length - 1) loop
             -- first bit
             if i = 0 then
-                block_to_replace_s(i) <= '1' when not valid_block_bits(i)
-                                    else '0';
+                if valid_block_bits(i) = '0' then
+                    block_to_replace_s(i) <= '1';
+                else 
+                    block_to_replace_s(i) <= '0';
+                end if;
             -- other bits
-            else            
-                block_to_replace_s(i) <= '1' when valid_block_bits(i - 1) 
-                                             and not valid_block_bits(i) 
-                                    else '0';
+            else
+                if valid_block_bits(i - 1) = '1' and valid_block_bits(i) = '0' then
+                    block_to_replace_s(i) <= '1';
+                else 
+                    block_to_replace_s(i) <= '0';
+                end if;
             end if;
         end loop;
     end process;
 
+    -- signal to arbitrate replacement policy once all blocks are valid
     all_blocks_valid <= '1' when block_to_replace_s = x"0000"
                    else '0';
     block_to_replace <= block_to_replace_s;
