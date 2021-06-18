@@ -1,4 +1,4 @@
-
+from random import randint
 
 class plru_node:
     def __init__ (self, parent = None, state = False):
@@ -31,15 +31,13 @@ class plru_tree:
 
         self.leaves = current_layer
 
-
-
     def toggle(self, bit):
         current_node = self.leaves[bit]
         while current_node is not self.root:
             current_node = current_node.parent
             current_node.toggle()
 
-    def current_replace_bit(self):
+    def bit_to_replace(self):
         current_node = self.root
 
         while (current_node not in self.leaves):
@@ -52,13 +50,16 @@ class plru_tree:
 
 if __name__ == "__main__":
     tree = plru_tree(height = 4)
-    print(tree.current_replace_bit())
-    tree.toggle(0)
-    print(tree.current_replace_bit())
-    tree.toggle(5)
-    print(tree.current_replace_bit())
-    tree.toggle(11)
-    print(tree.current_replace_bit())
 
+    file = open("plru-stimulus.txt", 'w')
+
+    for _ in range(256):
+        toggle_bit = randint(0, 15)
+        tree.toggle(toggle_bit)
+        replace_bit = tree.bit_to_replace()
+        file.write(f"{toggle_bit} {replace_bit}\n")
+
+    file.close()
+            
 
     

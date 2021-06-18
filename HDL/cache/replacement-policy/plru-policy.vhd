@@ -167,7 +167,7 @@ use ieee.numeric_std.all;
 entity plru_tree is
     generic (h : positive);
     port (
-        clk              : in  std_logic;
+        clk : in std_logic;
         
         toggle_in   : in  std_logic_vector(0 to (2 ** h) - 1);
         replace_out : out std_logic_vector(0 to (2 ** h) - 1);
