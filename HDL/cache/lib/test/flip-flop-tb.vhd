@@ -12,24 +12,12 @@ end t_flip_flop_tb;
 architecture t_flip_flop_tb_arch of t_flip_flop_tb is
     constant period : time := 20 ns;
 
-    component t_flip_flop 
-        generic (
-            initial : std_logic
-        );
-
-        port (
-            clk :  in std_logic;
-            t   :  in std_logic;
-            q   : out std_logic
-        );
-    end component;
-
     signal clk : std_logic := '0'; -- clock is initialized low
     signal t   : std_logic := '0'; -- t is initialized to low
     signal q   : std_logic;
     
 begin
-    UUT : t_flip_flop
+    UUT : entity t_flip_flop
         generic map (
             initial => '0' -- q is initialized to low
         )

@@ -25,6 +25,7 @@ architecture plru_branch_arch is
 
     signal toggle_in_s   : in  std_logic_vector(0 to 3);
     signal replace_out_s : out std_logic_vector(0 to 3);
+
 begin
     degenerate_tree : if h = 0 then
         replace_out(0) <= replace_in;
@@ -85,6 +86,7 @@ end plru_branch;
 architecture plru_node_arch of plru_node is
     signal toggle_s : std_logic;
     signal state_s  : std_logic;
+
 begin
     state : entity t_flip_flop
         generic map (inital => '0')
@@ -123,6 +125,7 @@ end plru_branch;
 architecture plru_root_arch of plru_root is
     signal toggle_s : std_logic;
     signal state_s  : std_logic;
+
 begin
     state : entity t_flip_flop
         generic map (inital => '0')
@@ -156,6 +159,7 @@ end plru_tree;
 architecture plru_tree_arch of plru_tree is
     root_toggle_s   : std_logic_vector(0 to 1);
     root_replace_s  : std_logic_vector(0 to 1);
+    
 begin
         root : entity plru_root
             port map (
@@ -180,33 +184,3 @@ begin
                 replace_out => replace_out
             );
 end plru_tree_arch;
-
-
--- library ieee;
--- use ieee.std_logic_1164.all;
--- use ieee.numeric_std.all;
-
--- entity plru_policy is
---     port(
---         clk               : in  std_logic;
---         most_recent_block : in  std_logic_vector(0 to 15);
---         block_to_replace  : out std_logic_vector(0 to 15)
---     );
--- end plru_policy;
-
--- architecture plru_policy_arch of plru_policy is
-    
--- begin
---     process
---     begin
---         for i in 1 to 8 loop
---             if i = 1 then
---                 -- root node
---             else
---                 for j in 0 to i generate
---                     -- others
---                 end generate;
---             end if;
---         end loop;
---     end process;
--- end plru_policy_arch;

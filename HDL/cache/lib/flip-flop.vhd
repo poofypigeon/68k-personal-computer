@@ -48,6 +48,7 @@ end t_flip_flop;
 
 architecture t_flip_flop_arch of t_flip_flop is
     signal q_s : std_logic := initial; -- internal output signal ref
+    
 begin
     toggle : process(clk)
     begin
@@ -82,17 +83,9 @@ entity d_type_register is
 end d_type_register;
 
 architecture d_type_register_arch of d_type_register is
-    component d_flip_flop
-        port (
-            clk : in  std_logic; -- clock
-            en  : in  std_logic; -- input enable
-            d   : in  std_logic; -- data in
-            q   : out std_logic  -- data out
-        );
-    end component;
 begin
     build_array : for i in 0 to bit_count - 1 generate
-        array_bit : d_flip_flop port map (
+        array_bit : entity d_flip_flop port map (
             clk => clk,
             en  => en,
             d   => d(i), -- map flip-flop input to corresponding register input

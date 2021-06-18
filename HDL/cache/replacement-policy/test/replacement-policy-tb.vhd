@@ -15,6 +15,7 @@ architecture prioritize_invalid_blocks_tb_arch of prioritize_invalid_blocks_tb i
     signal all_blocks_valid : std_logic;
     signal block_valid_bits : std_logic_vector(0 to 15);
     signal block_to_replace : std_logic_vector(0 to 15);
+    
 begin
     UUT : entity prioritize_invalid_blocks 
         port map (

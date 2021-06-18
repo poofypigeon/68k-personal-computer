@@ -3,16 +3,17 @@ vpath %.vhd ..
 GHDL = ghdl
 
 # OPTS
-WORK = flipflop
+WORK 	 = flipflop
 WORK_DIR = sim/
+STD 	 = 93c
 
 # RUN_OPTS
 STOP_TIME = 200ns
-ASSERT = error
-FST = out.fst
+ASSERT 	  = error
+FST 	  = out.fst
 
 # FLAGS
-OPTS = --work=${WORK} --workdir=${WORK_DIR}
+OPTS 	 = --work=${WORK} --workdir=${WORK_DIR} --std=${STD}
 RUN_OPTS = --stop-time=${STOP_TIME} --assert-level=${ASSERT} --fst=${WORK_DIR}${FST}
 
 UNIT_TB = ${UNIT}_tb

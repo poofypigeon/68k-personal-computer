@@ -9,18 +9,6 @@ end cache_block_tb;
 architecture tb of cache_block_tb is
     constant period : time := 20 ns;
 
-    component cache_block
-        port (
-            clk             : in  std_logic;
-            set_is_selected : in  std_logic;
-            replace_en      : in  std_logic;
-            reset           : in  std_logic
-            hit             : out std_logic;
-            valid           : out std_logic;
-            tag             : in  std_logic_vector(7 downto 0);
-        );
-    end component;
-
     signal  clk             : std_logic;
     signal  set_is_selected : std_logic;
     signal  replace_en      : std_logic;
@@ -30,7 +18,7 @@ architecture tb of cache_block_tb is
     signal  tag             : std_logic_vector(7 downto 0);
 
 begin
-    UUT: cache_block 
+    UUT: entity cache_block 
         port map(
             clk             => clk, 
             set_is_selected => set_is_selected, 
