@@ -64,12 +64,6 @@ begin
 end plru_branch_arch
 
 
-
-
-
-
-
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -109,13 +103,6 @@ begin
 end plru_node_arch;
 
 
-
-
-
-
-
-
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -150,14 +137,6 @@ begin
     replace_out_a <= not state_s;
     replace_out_b <= state_s;
 end plru_root_arch;
-
-
-
-
-
-
-
-
 
 
 library ieee;
@@ -201,14 +180,6 @@ begin
                 replace_out => replace_out
             );
 end plru_tree_arch;
-
-
-
-
-
-
-
-
 
 
 -- library ieee;
