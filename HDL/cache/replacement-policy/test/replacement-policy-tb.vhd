@@ -85,6 +85,29 @@ architecture plru_tree_tb_arch of plru_tree_tb is
 
     signal toggle_in   : std_logic_vector(0 to 15);
     signal replace_out : std_logic_vector(0 to 15);
+
+    function int_to_one_hot (num, size : natural) return std_logic_vector is
+        variable result : std_logic_vector(0 to size - 1);
+    begin
+        for i in 0 to size - 1 loop
+            if i = num then
+                result(i) = '1';
+            else 
+                result(i) = '0';
+            end if;
+        end loop;
+            return result;
+    end function int_to_one_hot;
+
+    function one_hot_to_int (one_hot : std_logic_vector) return integer is
+    begin
+        for i in 0 to one_hot'length - 1 loop
+            if one_hot(i) = '1' then
+                return i;
+        end loop;
+                return -1;
+    end function one_hot_to_int;
+
 begin
     UUT : entity plru_tree
         generic map (h => 4)
@@ -107,7 +130,7 @@ begin
         file stimulus_file : stimulus_file_type
             open is "stimulus/plru-stimulus.txt"
 
-        variable i    : natural;
+        variable i    : integer;
         variable temp : stimulus;
     begin
         -- initialize to state of 0
@@ -128,5 +151,7 @@ begin
 
             i := i + 1;
         end loop
+
+        wait; -- finish test
     end process
 end plru_tree_tb_arch
