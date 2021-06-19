@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------
---  PRIORITIZE INVALID BLOCKS REPLACEMENT POLICY TESTBENCH
---------------------------------------------------------------------------------
+--< VALID_POLICY_TB >---------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
---------------------------------------------------------------------------------
+--+---------------------------------------------------------------------------------------------
+--|
+--+---------------------------------------------------------------------------------------------
 entity valid_policy_tb is
 
 end valid_policy_tb;
@@ -16,9 +16,9 @@ architecture valid_policy_tb_arch of valid_policy_tb is
     signal valid_block_bits : std_logic_vector(0 to 15);
     signal block_to_replace : std_logic_vector(0 to 15);
 
-    -- this function was borrowed from Botond Sándor Kirei on Stack Overflow
-    -- becuase I could not be arsed to write it when I just want to make a
-    -- testbench. https://stackoverflow.com/a/38850022
+    -- This function was borrowed from Botond Sándor Kirei on Stack Overflow becuase I could not 
+    -- be arsed to write it myself.
+    -- >>> https://stackoverflow.com/a/38850022
     function to_string ( a: std_logic_vector) return string is
         variable b : string (1 to a'length) := (others => NUL);
         variable stri : integer := 1; 
