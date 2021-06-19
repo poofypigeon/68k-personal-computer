@@ -51,13 +51,19 @@ class plru_tree:
 if __name__ == "__main__":
     tree = plru_tree(height = 4)
 
-    file = open("plru-stimulus.txt", 'w')
+    file = open("plru-stimulus", 'wb')
+    file_data = []
 
-    for _ in range(256):
+    for _ in range(2048):
         toggle_bit = randint(0, 15)
+        file_data.extend(toggle_bit.to_bytes(4, 'little'))
         tree.toggle(toggle_bit)
         replace_bit = tree.bit_to_replace()
-        file.write(f"{toggle_bit} {replace_bit}\n")
+        print(f"{toggle_bit} {replace_bit}")
+        file_data.extend(replace_bit.to_bytes(4, 'little'))
+
+    file_bytes = bytes(file_data)
+    file.write(file_bytes)
 
     file.close()
             

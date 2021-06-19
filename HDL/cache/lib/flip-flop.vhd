@@ -36,12 +36,12 @@ use ieee.numeric_std.all;
 --------------------------------------------------------------------------------
 entity t_flip_flop is
     generic (
-        initial : std_logic -- initial state
+        initial : std_logic := '0' -- initial state
     );
 
     port (
-        clk :  in std_logic; -- clock
-        t   :  in std_logic; -- toggle enable
+        clk : in  std_logic; -- clock
+        t   : in  std_logic; -- toggle enable
         q   : out std_logic  -- output
     );
 end t_flip_flop;
@@ -85,7 +85,7 @@ end d_type_register;
 architecture d_type_register_arch of d_type_register is
 begin
     build_array : for i in 0 to bit_count - 1 generate
-        array_bit : entity d_flip_flop port map (
+        array_bit : entity work.d_flip_flop port map (
             clk => clk,
             en  => en,
             d   => d(i), -- map flip-flop input to corresponding register input

@@ -13,13 +13,13 @@ use ieee.numeric_std.all;
 -- in a set can never be fragmented if tags are assigned to blocks in a fixed
 -- order. This allows this component to have a simple cascading flow.
 --------------------------------------------------------------------------------
-entity prioritize_invalid is
+entity prioritize_invalid_blocks is
     port(
         all_blocks_valid : out std_logic; -- signals block replacement arbitration to main policy
         valid_block_bits : in  std_logic_vector(0 to 15); -- valid bits from the blocks in the set
         block_to_replace : out std_logic_vector(0 to 15)  -- signals the next block to be replaced
     );
-end prioritize_invalid;
+end prioritize_invalid_blocks;
 
 architecture prioritize_invalid_blocks_arch of prioritize_invalid_blocks is
     signal block_to_replace_s : std_logic_vector(0 to 15);
@@ -50,4 +50,4 @@ begin
                    else '0';
     block_to_replace <= block_to_replace_s;
 
-end prioritize_invalid_arch;
+end prioritize_invalid_blocks_arch;
