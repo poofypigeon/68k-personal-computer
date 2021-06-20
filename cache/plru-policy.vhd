@@ -103,9 +103,9 @@ use ieee.numeric_std.all;
 --| A dynamically generated Pseudo Least Recently Used tree must create interfaces for each
 --| iteration that carry the scope required to:
 --| [1] Recieve signals from their parent node and pass their signals:
---|     > Each plru_recursive iteration holds two instances of plru_node which is fully mapped
---|     > to ports which were passed in its enclosing plru_recursive iteration, and to signals
---|     > which will be passed to the two new plru_recursive iterations which will be generated
+--|     > Each plru_recursive iteration holds two instances of plru_node which are fully mapped
+--|     > to ports that were passed in its enclosing plru_recursive iteration, and to signals
+--|     > which will be passed to the two new plru_recursive iterations that will be generated
 --|     > from the current iteration. Because the two child nodes are generated in a loop, the
 --|     > signals for these mappings must be able to be associated with an iterator. For this,
 --|     > we create the .*_s signals of std_logic_vector(0 to 3) in which range(0 to 1)--

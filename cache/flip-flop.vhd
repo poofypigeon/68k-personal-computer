@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
---| A single bit D-flip-flop.
+--| Single bit D-flip-flop.
 --+---------------------------------------------------------------------------------------------
 entity d_flip_flop is
     port (
@@ -32,7 +32,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
---| A simple T-flip-flop
+--| Simple T-flip-flop
 --+---------------------------------------------------------------------------------------------
 entity t_flip_flop is
     generic ( initial : std_logic := '0' );

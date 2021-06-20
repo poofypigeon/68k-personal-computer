@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| A cache block responsible for keeping track of tags which currently are represented in a
 --| larger cache set.
---|
+--| ---
 --| A block will report a hit when two conditions are met:
 --| [1] The valid bit is enabled to signify that its tag is associated with valid data in the
 --|     cache's SRAM.
