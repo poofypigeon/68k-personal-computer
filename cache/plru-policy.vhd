@@ -120,7 +120,7 @@ use ieee.numeric_std.all;
 --|     > of plru_recursive maps its portion of replace_out to the replace_in from its parent.
 --+--------------------------------------------------------------------------------------------
 entity plru_recursive is
-    generic ( height : natural );
+    generic ( height : positive );
     port (
         clk : in  std_logic;
         
@@ -142,16 +142,16 @@ architecture plru_recursive_arch of plru_recursive is
     signal replace_out_s : std_logic_vector(0 to 3);
 
 begin
-    outer_structure : 
+    gen_main : 
     -- terminate recursion on last iteration (height = 1) by binding in/out to final ports
     if height = 1 generate
         replace_out <= replace_in;
         toggle_out  <= toggle_in;
     -- continue recursion
     elsif height > 1 generate
-       inner_structure : for child in 0 to 1 generate
+       gen_recursive : for child in 0 to 1 generate
             -- component being recursively generated
-            node : entity work.plru_node
+            node_instance : entity work.plru_node
                 port map (
                     clk => clk,
 
@@ -165,7 +165,7 @@ begin
                 );
 
             -- wrapper to allow for recursive generation
-            branch : entity work.plru_recursive
+            recursive_instance : entity work.plru_recursive
                 -- recursive call to generate self with height decremented
                 generic map ( height => height - 1 )
                 port map (
@@ -179,8 +179,8 @@ begin
                     replace_out => replace_out
                         (child * (2 ** (height - 1)) to (child + 1) * (2 ** (height - 1)) - 1)
                 );
-        end generate inner_structure;
-    end generate outer_structure;
+        end generate gen_recursive;
+    end generate gen_main;
 
 end plru_recursive_arch;
 

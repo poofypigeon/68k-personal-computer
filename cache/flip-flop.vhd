@@ -68,28 +68,28 @@ use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 entity d_type_register is
     generic (
-        bit_count : positive
+        bit_width : positive
     );
 
     port (
         clk : in  std_logic;
 
         en  : in  std_logic; -- input enable
-        d   : in  std_logic_vector(bit_count downto 0); -- data in
-        q   : out std_logic_vector(bit_count downto 0)  -- data out
+        d   : in  std_logic_vector(bit_width downto 0); -- data in
+        q   : out std_logic_vector(bit_width downto 0)  -- data out
     );
 end d_type_register;
 
 architecture d_type_register_arch of d_type_register is
 begin
-    build_array : for i in 0 to bit_count - 1 generate
-        array_bit : entity work.d_flip_flop port map (
+    gen_flip_flop : for i in 0 to d'length - 1 generate
+        flip_flop_instance : entity work.d_flip_flop port map (
             clk => clk,
 
             en  => en,
             d   => d(i),
             q   => q(i)
         );
-    end generate build_array;
+    end generate gen_flip_flop;
 
 end d_type_register_arch;

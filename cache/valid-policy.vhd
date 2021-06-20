@@ -14,19 +14,20 @@ use ieee.numeric_std.all;
 --| This allows this component to have a simple cascading flow.
 --+---------------------------------------------------------------------------------------------
 entity valid_policy is
-    port(
-        all_blocks_valid : out std_logic; -- signals block replacement arbitration to main policy
-        valid_block_bits : in  std_logic_vector(0 to 15); -- valid bits from the blocks in the set
-        block_to_replace : out std_logic_vector(0 to 15)  -- signals the next block to be replaced
+    generic ( block_id_bit_width : positive )
+    port (
+        all_blocks_valid : out std_logic;
+        valid_blocks     : in  std_logic_vector(0 to block_id_bit_width - 1);
+        block_to_replace : out std_logic_vector(0 to block_id_bit_width - 1)
     );
 end valid_policy;
 
 architecture valid_policy_arch of valid_policy is
-    signal block_to_replace_s : std_logic_vector(0 to 15);
+    signal block_to_replace_s : std_logic_vector(0 to block_id_bit_width - 1);
 begin
-    process(valid_block_bits)
+    update : process(valid_block_bits)
     begin
-        for i in 0 to (valid_block_bits'length - 1) loop
+        for i in 0 to valid_block_bits'length - 1 loop
             -- first bit - no dependency on previous bits
             if i = 0 then
                 if valid_block_bits(i) = '0' then
@@ -43,10 +44,10 @@ begin
                 end if;
             end if;
         end loop;
-    end process;
+    end process update;
 
     -- signal to arbitrate replacement policy once all blocks are valid
-    all_blocks_valid <= '1' when block_to_replace_s = x"0000"
+    all_blocks_valid <= '1' when to_integer(unsigned(block_to_replace_s)) = 0
                    else '0';
     block_to_replace <= block_to_replace_s;
 
