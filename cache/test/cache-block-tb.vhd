@@ -1,7 +1,10 @@
+--< T_FLIP_FLOP_TB >----------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
+--+---------------------------------------------------------------------------------------------
+--|
+--+---------------------------------------------------------------------------------------------
 entity cache_block_tb is
     
 end cache_block_tb;
@@ -19,7 +22,8 @@ architecture cache_block_tb_arch of cache_block_tb is
 
 begin
     UUT: entity work.cache_block 
-        port map(
+        generic map ( tag_bit_count => 8 )
+        port map (
             clk             => clk, 
             set_is_selected => set_is_selected, 
             replace_en      => replace_en, 
@@ -31,11 +35,12 @@ begin
 
     process
     begin
-        -- reset valid bit as would be done on boot up
-        reset <= '1';
-        wait for period;
-        assert(valid = '0')
-        report "Failed at initial reset." severity error;
+        -- this should be initialized by default
+        -- -- reset valid bit as would be done on boot up
+        -- reset <= '1';
+        -- wait for period;
+        -- assert(valid = '0')
+        -- report "Failed at initial reset." severity error;
 
         -- load tag "00001111" into register
         reset <= '0';
