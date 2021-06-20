@@ -93,4 +93,5 @@ begin
 
         wait; -- finish test
     end process;
+    
 end plru_policy_tb_arch;

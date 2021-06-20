@@ -29,6 +29,7 @@ architecture valid_policy_tb_arch of valid_policy_tb is
             end loop;
         return b;
     end function;
+
 begin
     UUT : entity work.valid_policy 
         port map (
@@ -78,4 +79,5 @@ begin
         -- finish test
         wait;
     end process;
+    
 end valid_policy_tb_arch;

@@ -6,7 +6,7 @@ entity cache_block_tb is
     
 end cache_block_tb;
 
-architecture tb of cache_block_tb is
+architecture cache_block_tb_arch of cache_block_tb is
     constant period : time := 20 ns;
 
     signal  clk             : std_logic;
@@ -18,7 +18,7 @@ architecture tb of cache_block_tb is
     signal  tag             : std_logic_vector(7 downto 0);
 
 begin
-    UUT: entity cache_block 
+    UUT: entity work.cache_block 
         port map(
             clk             => clk, 
             set_is_selected => set_is_selected, 
@@ -36,7 +36,6 @@ begin
         wait for period;
         assert(valid = '0')
         report "Failed at initial reset." severity error;
-
 
         -- load tag "00001111" into register
         reset <= '0';
@@ -82,4 +81,5 @@ begin
         assert(hit = '0')
         report "Failed to miss with valid bit off." severity error;
     end process;
-end tb;
+    
+end cache_block_tb_arch;

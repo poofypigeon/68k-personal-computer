@@ -18,9 +18,7 @@ architecture t_flip_flop_tb_arch of t_flip_flop_tb is
     
 begin
     UUT : entity t_flip_flop
-        generic map (
-            initial => '0' -- q is initialized to low
-        )
+        generic map ( initial => '0' )
         port map (
             clk => clk,
             t   => t,
@@ -30,7 +28,7 @@ begin
     -- clock generation
     clk <= not clk after period / 2;
 
-    tb : process
+    process
     begin
         -- initialization value test
         wait for 0 ns; -- prevents error by allowing q to initialize
@@ -56,5 +54,6 @@ begin
         -- finish test
         t <= '0';
         wait;
-    end process tb;
+    end process;
+
 end t_flip_flop_tb_arch;

@@ -23,7 +23,7 @@ architecture plru_root_arch of plru_root is
 
 begin
     state : entity work.t_flip_flop
-        generic map (initial => '0')
+        generic map ( initial => '0' )
         port map (
             clk => clk,
             -- Since the toggle is enabled by toggle_in_left or toggle_in_right, we can save some 
@@ -35,6 +35,7 @@ begin
 
     replace_out_left  <= not state_s;
     replace_out_right <= state_s;
+
 end plru_root_arch;
 
 
@@ -73,7 +74,7 @@ architecture plru_node_arch of plru_node is
 
 begin
     state : entity work.t_flip_flop
-        generic map (initial => '0')
+        generic map ( initial => '0' )
         port map (
             clk => clk,
 
@@ -87,6 +88,7 @@ begin
 
     replace_out_left  <= replace_in and not state_s;
     replace_out_right <= replace_in and state_s;
+
 end plru_node_arch;
 
 
@@ -100,8 +102,7 @@ use ieee.numeric_std.all;
 --| ---
 --| A dynamically generated Pseudo Least Recently Used tree must create interfaces for each
 --| iteration that carry the scope required to:
---|
---| (1) Recieve signals from their parent node and pass their signals:
+--| [1] Recieve signals from their parent node and pass their signals:
 --|     > Each plru_recursive iteration holds two instances of plru_node which is fully mapped
 --|     > to ports which were passed in its enclosing plru_recursive iteration, and to signals
 --|     > which will be passed to the two new plru_recursive iterations which will be generated
@@ -111,8 +112,7 @@ use ieee.numeric_std.all;
 --|     > representing .*_left and .*_right of the (child = 0) node--are passed to the ports
 --|     > of the plru_recursive generation of the first child, and range(2 to 3) are passed 
 --|     > for the plru_recursive generation of the second child.
---|
---| (2) Map the outputs of only the leaves of the tree to the outputs of the greater structure:
+--| [2] Map the outputs of only the leaves of the tree to the outputs of the greater structure:
 --|     > Each iteration of plru_recursive passes the first half of the replace_out vector
 --|     > it recieved to its first child, and the second half to its second child. Nothing
 --|     > is mapped to the replace_out vector until the terminating iteration, upon which,
@@ -120,7 +120,7 @@ use ieee.numeric_std.all;
 --|     > of plru_recursive maps its portion of replace_out to the replace_in from its parent.
 --+--------------------------------------------------------------------------------------------
 entity plru_recursive is
-    generic (height : natural);
+    generic ( height : natural );
     port (
         clk : in  std_logic;
         
@@ -167,7 +167,7 @@ begin
             -- wrapper to allow for recursive generation
             branch : entity work.plru_recursive
                 -- recursive call to generate self with height decremented
-                generic map (height => height - 1)
+                generic map ( height => height - 1 )
                 port map (
                     clk => clk,
 
@@ -181,6 +181,7 @@ begin
                 );
         end generate inner_structure;
     end generate outer_structure;
+
 end plru_recursive_arch;
 
 
@@ -193,7 +194,7 @@ use ieee.numeric_std.all;
 --| a usable component.
 --+--------------------------------------------------------------------------------------------
 entity plru_policy is
-    generic (height : positive);
+    generic ( height : positive );
     port (
         clk : in std_logic;
         
@@ -215,7 +216,7 @@ begin
             );
 
         branches : entity work.plru_recursive
-            generic map (height => height)
+            generic map ( height => height )
             port map (
                 clk => clk,
 
@@ -225,4 +226,5 @@ begin
                 replace_in  => root_replace_s,
                 replace_out => replace_out
             );
+
 end plru_policy_arch;
