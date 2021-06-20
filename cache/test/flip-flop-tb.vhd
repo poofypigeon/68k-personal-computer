@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------
---  T-FLIP-FLOP TESTBENCH
---------------------------------------------------------------------------------
+--< T_FLIP_FLOP_TB >----------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
---------------------------------------------------------------------------------
+--+---------------------------------------------------------------------------------------------
+--|
+--+---------------------------------------------------------------------------------------------
 entity t_flip_flop_tb is
 
 end t_flip_flop_tb;
@@ -31,7 +31,7 @@ begin
     process
     begin
         -- initialization value test
-        wait for 0 ns; -- prevents error by allowing q to initialize
+        wait for 2 ns; -- prevents error by allowing q to initialize
         assert q = '0'
         report "FAILED: ""initialization value test""" severity error;
 

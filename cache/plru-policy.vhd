@@ -207,24 +207,24 @@ architecture plru_policy_arch of plru_policy is
     signal root_replace_s : std_logic_vector(0 to 1);
     
 begin
-        root : entity work.plru_root
-            port map (
-                clk => clk,
+    root : entity work.plru_root
+        port map (
+            clk => clk,
 
-                replace_out_left  => root_replace_s(0),
-                replace_out_right => root_replace_s(1)
-            );
+            replace_out_left  => root_replace_s(0),
+            replace_out_right => root_replace_s(1)
+        );
 
-        branches : entity work.plru_recursive
-            generic map ( height => height )
-            port map (
-                clk => clk,
+    branches : entity work.plru_recursive
+        generic map ( height => height )
+        port map (
+            clk => clk,
 
-                toggle_out => open, -- *see plru_root t_flip_flop port mapping
-                toggle_in  => toggle_in,
+            toggle_out => open, -- *see plru_root t_flip_flop port mapping
+            toggle_in  => toggle_in,
 
-                replace_in  => root_replace_s,
-                replace_out => replace_out
-            );
+            replace_in  => root_replace_s,
+            replace_out => replace_out
+        );
 
 end plru_policy_arch;
