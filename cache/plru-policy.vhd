@@ -1,6 +1,6 @@
 --< PLRU_ROOT >--------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| Root node which sits at the root of the Pseudo Least Recently Used binary tree structure. 
@@ -11,15 +11,15 @@ use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 entity plru_root is
     port (
-        clk : in std_logic;
+        clk : in std_ulogic;
         
-        replace_out_left  : out std_logic;
-        replace_out_right : out std_logic
+        replace_out_left  : out std_ulogic;
+        replace_out_right : out std_ulogic
     );
 end plru_root;
 
 architecture plru_root_arch of plru_root is
-    signal state_s : std_logic;
+    signal state_s : std_ulogic;
 
 begin
     state : entity work.t_flip_flop
@@ -41,7 +41,7 @@ end plru_root_arch;
 
 --< PLRU_NODE >--------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| Node which is structurally connected to each recursive iteration of the Pseudo Least
@@ -56,21 +56,21 @@ use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 entity plru_node is
     port (
-        clk : in std_logic;
+        clk : in std_ulogic;
 
-        toggle_in_left  : in  std_logic;
-        toggle_in_right : in  std_logic;
-        toggle_out      : out std_logic;
+        toggle_in_left  : in  std_ulogic;
+        toggle_in_right : in  std_ulogic;
+        toggle_out      : out std_ulogic;
 
-        replace_in        : in  std_logic;
-        replace_out_left  : out std_logic;
-        replace_out_right : out std_logic
+        replace_in        : in  std_ulogic;
+        replace_out_left  : out std_ulogic;
+        replace_out_right : out std_ulogic
     );
 end plru_node;
 
 architecture plru_node_arch of plru_node is
-    signal toggle_s : std_logic;
-    signal state_s  : std_logic;
+    signal toggle_s : std_ulogic;
+    signal state_s  : std_ulogic;
 
 begin
     state : entity work.t_flip_flop
@@ -94,7 +94,7 @@ end plru_node_arch;
 
 --< PLRU_RECURSIVE >---------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| A recursive structure for dynamically generating a Pseudo Least Recently Used replacement
@@ -108,7 +108,7 @@ use ieee.numeric_std.all;
 --|     > which will be passed to the two new plru_recursive iterations that will be generated
 --|     > from the current iteration. Because the two child nodes are generated in a loop, the
 --|     > signals for these mappings must be able to be associated with an iterator. For this,
---|     > we create the .*_s signals of std_logic_vector(0 to 3) in which range(0 to 1)--
+--|     > we create the .*_s signals of std_ulogic_vector(0 to 3) in which range(0 to 1)--
 --|     > representing .*_left and .*_right of the (child = 0) node--are passed to the ports
 --|     > of the plru_recursive generation of the first child, and range(2 to 3) are passed 
 --|     > for the plru_recursive generation of the second child.
@@ -122,13 +122,13 @@ use ieee.numeric_std.all;
 entity plru_recursive is
     generic ( height : positive );
     port (
-        clk : in  std_logic;
+        clk : in  std_ulogic;
         
-        toggle_in   : in  std_logic_vector(0 to (2 ** height) - 1);
-        toggle_out  : out std_logic_vector(0 to 1);
+        toggle_in   : in  std_ulogic_vector(0 to (2 ** height) - 1);
+        toggle_out  : out std_ulogic_vector(0 to 1);
         
-        replace_in  : in  std_logic_vector(0 to 1);
-        replace_out : out std_logic_vector(0 to (2 ** height) - 1)
+        replace_in  : in  std_ulogic_vector(0 to 1);
+        replace_out : out std_ulogic_vector(0 to (2 ** height) - 1)
     );
 end plru_recursive;
 
@@ -138,8 +138,8 @@ architecture plru_recursive_arch of plru_recursive is
     --
     -- signals .*_s(0) and .*_s(1) are for .*_left and .*_right, respectively, of the (child = 0)
     -- node, and the same is true of .*_s(2) and .*_s(3) for the (child = 1) node.
-    signal toggle_in_s   : std_logic_vector(0 to 3);
-    signal replace_out_s : std_logic_vector(0 to 3);
+    signal toggle_in_s   : std_ulogic_vector(0 to 3);
+    signal replace_out_s : std_ulogic_vector(0 to 3);
 
 begin
     gen_main : 
@@ -187,7 +187,7 @@ end plru_recursive_arch;
 
 --< PLRU_POLICY >------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| Assembles the discrete elements which comprise the Pseudo Least Recently Used policy into
@@ -196,15 +196,15 @@ use ieee.numeric_std.all;
 entity plru_policy is
     generic ( height : positive );
     port (
-        clk : in std_logic;
+        clk : in std_ulogic;
         
-        toggle_in   : in  std_logic_vector(0 to (2 ** height) - 1);
-        replace_out : out std_logic_vector(0 to (2 ** height) - 1)
+        toggle_in   : in  std_ulogic_vector(0 to (2 ** height) - 1);
+        replace_out : out std_ulogic_vector(0 to (2 ** height) - 1)
     );
 end plru_policy;
 
 architecture plru_policy_arch of plru_policy is
-    signal root_replace_s : std_logic_vector(0 to 1);
+    signal root_replace_s : std_ulogic_vector(0 to 1);
     
 begin
     root : entity work.plru_root

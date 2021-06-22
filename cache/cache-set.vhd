@@ -1,7 +1,9 @@
 --< CACHE_SET >--------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
+
+use work.vector_reduce.or_reduce;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------
@@ -11,11 +13,11 @@ entity cache_set is
         block_id_bit_width : positive
     );
     port(
-        clk : in std_logic;
+        clk : in std_ulogic;
 
-        set_is_selected : in  std_logic;
-        reset_valid     : in  std_logic;
-        query_hit       : out std_logic;
+        set_is_selected : in  std_ulogic;
+        reset_valid     : in  std_ulogic;
+        query_hit       : out std_ulogic;
         tag_query       : in  unsigned(tag_bit_width - 1 downto 0)
         hit_block_id    : out unsigned(block_id_bit_width - 1 downto 0)
     );
@@ -24,22 +26,16 @@ end cache_set;
 architecture cache_set_arch of cache_set is
     constant block_count : positive := 2 ** block_id_bit_width;
 
-    signal pulse_s                : std_logic;
-    signal all_blocks_valid_s     : std_logic;
-    signal query_hit_s            : std_logic;
-    signal valid_blocks_s         : std_logic_vector(0 to block_count - 1);
-    signal valid_policy_replace_s : std_logic_vector(0 to block_count - 1);
-    signal plru_policy_replace_s  : std_logic_vector(0 to block_count - 1);
-    signal block_to_replace_s     : std_logic_vector(0 to block_count - 1);
-    signal replace_en_s           : std_logic_vector(0 to block_count - 1);
-    signal hit_block_s            : std_logic_vector(0 to block_count - 1);
-    signal block_to_access_s      : std_logic_vector(0 to block_count - 1);
-    
-    function is_all(vec : std_logic_vector; val : std_logic) return boolean is
-        constant all_bits : std_logic_vector(vec'range) := (others => val);
-    begin
-        return vec = all_bits;
-    end function;
+    signal pulse_s                : std_ulogic;
+    signal all_blocks_valid_s     : std_ulogic;
+    signal query_hit_s            : std_ulogic;
+    signal valid_blocks_s         : std_ulogic_vector(0 to block_count - 1);
+    signal valid_policy_replace_s : std_ulogic_vector(0 to block_count - 1);
+    signal plru_policy_replace_s  : std_ulogic_vector(0 to block_count - 1);
+    signal block_to_replace_s     : std_ulogic_vector(0 to block_count - 1);
+    signal replace_en_s           : std_ulogic_vector(0 to block_count - 1);
+    signal hit_block_s            : std_ulogic_vector(0 to block_count - 1);
+    signal block_to_access_s      : std_ulogic_vector(0 to block_count - 1);
 
 begin
     gen_blocks : for i in 0 to block_count - 1 generate
@@ -83,8 +79,8 @@ begin
 
     pulse_s <= clk and set_is_selected;
 
-    query_hit_s <= '1' when not is_all(hit_block_s, '0')
-               else '0';
+    query_hit_s <= '1' when or_reduce(hit_block_s) = '1'
+              else '0';
     query_hit   <= query_hit_s and set_is_selected;
 
     block_to_replace_s <= valid_policy_replace_s when all_blocks_valid_s = '0'

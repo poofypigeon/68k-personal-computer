@@ -1,17 +1,17 @@
 --< D_FLIP_FLOP >-------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --| Single bit D-flip-flop.
 --+---------------------------------------------------------------------------------------------
 entity d_flip_flop is
     port (
-        clk : in  std_logic;
+        clk : in  std_ulogic;
 
-        en  : in  std_logic; -- input enable
-        d   : in  std_logic; -- data in
-        q   : out std_logic  -- data out
+        en  : in  std_ulogic; -- input enable
+        d   : in  std_ulogic; -- data in
+        q   : out std_ulogic  -- data out
     );
 end d_flip_flop;
 
@@ -29,23 +29,23 @@ end d_flip_flop_arch;
 
 --< T_FLIP_FLOP >-------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --| Simple T-flip-flop
 --+---------------------------------------------------------------------------------------------
 entity t_flip_flop is
-    generic ( initial : std_logic := '0' );
+    generic ( initial : std_ulogic := '0' );
     port (
-        clk : in  std_logic;
+        clk : in  std_ulogic;
 
-        t   : in  std_logic; -- toggle enable
-        q   : out std_logic  -- output
+        t   : in  std_ulogic; -- toggle enable
+        q   : out std_ulogic  -- output
     );
 end t_flip_flop;
 
 architecture t_flip_flop_arch of t_flip_flop is
-    signal q_s : std_logic := initial;
+    signal q_s : std_ulogic := initial;
     
 begin
     toggle : process(clk)
@@ -61,7 +61,7 @@ end t_flip_flop_arch;
 
 --< D_TYPE_REGISTER >---------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --| Variable size register comprised of an array of single bit D-flip-flops
@@ -72,11 +72,11 @@ entity d_type_register is
     );
 
     port (
-        clk : in  std_logic;
+        clk : in  std_ulogic;
 
-        en  : in  std_logic; -- input enable
-        d   : in  std_logic_vector(bit_width downto 0); -- data in
-        q   : out std_logic_vector(bit_width downto 0)  -- data out
+        en  : in  std_ulogic; -- input enable
+        d   : in  std_ulogic_vector(bit_width downto 0); -- data in
+        q   : out std_ulogic_vector(bit_width downto 0)  -- data out
     );
 end d_type_register;
 

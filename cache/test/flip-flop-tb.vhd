@@ -1,6 +1,6 @@
 --< T_FLIP_FLOP_TB >----------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --|
@@ -12,9 +12,9 @@ end t_flip_flop_tb;
 architecture t_flip_flop_tb_arch of t_flip_flop_tb is
     constant period : time := 20 ns;
 
-    signal clk : std_logic := '0'; -- clock is initialized low
-    signal t   : std_logic := '0'; -- t is initialized to low
-    signal q   : std_logic;
+    signal clk : std_ulogic := '0'; -- clock is initialized low
+    signal t   : std_ulogic := '0'; -- t is initialized to low
+    signal q   : std_ulogic;
     
 begin
     UUT : entity t_flip_flop

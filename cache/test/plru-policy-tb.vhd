@@ -1,6 +1,6 @@
 --< PLRU_POLICY_TB >----------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --|
@@ -12,33 +12,10 @@ end plru_policy_tb;
 architecture plru_policy_tb_arch of plru_policy_tb is
     constant period : time := 20 ns;
 
-    signal clk : std_logic := '0';
+    signal clk : std_ulogic := '0';
 
-    signal toggle_in   : std_logic_vector(0 to 15);
-    signal replace_out : std_logic_vector(0 to 15);
-
-    function int_to_one_hot (num, size : natural) return std_logic_vector is
-        variable result : std_logic_vector(0 to size - 1);
-    begin
-        for i in 0 to size - 1 loop
-            if i = num then
-                result(i) := '1';
-            else 
-                result(i) := '0';
-            end if;
-        end loop;
-            return result;
-    end function int_to_one_hot;
-
-    function one_hot_to_int (one_hot : std_logic_vector) return integer is
-    begin
-        for i in 0 to one_hot'length - 1 loop
-            if one_hot(i) = '1' then
-                return i;
-            end if;
-        end loop;
-                return -1;
-    end function one_hot_to_int;
+    signal toggle_in   : std_ulogic_vector(0 to 15);
+    signal replace_out : std_ulogic_vector(0 to 15);
 
 begin
     UUT : entity work.plru_policy
@@ -75,7 +52,7 @@ begin
             read(stimulus_file, temp_stimulus.toggle_bit);
             read(stimulus_file, temp_stimulus.resulting_state);
 
-            toggle_in <= int_to_one_hot(temp_stimulus.toggle_bit, 16);
+            toggle_in <= (temp_stimulus.toggle_bit => '1', others => '0');
             wait until falling_edge(clk);
 
             assert one_hot_to_int(replace_out) = temp_stimulus.resulting_state

@@ -1,6 +1,6 @@
 --< T_FLIP_FLOP_TB >----------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --|
@@ -12,13 +12,13 @@ end cache_block_tb;
 architecture cache_block_tb_arch of cache_block_tb is
     constant period : time := 20 ns;
 
-    signal  clk             : std_logic;
-    signal  set_is_selected : std_logic;
-    signal  replace_en      : std_logic;
-    signal  hit             : std_logic;
-    signal  valid           : std_logic;
-    signal  reset           : std_logic;
-    signal  tag             : std_logic_vector(7 downto 0);
+    signal  clk             : std_ulogic;
+    signal  set_is_selected : std_ulogic;
+    signal  replace_en      : std_ulogic;
+    signal  hit             : std_ulogic;
+    signal  valid           : std_ulogic;
+    signal  reset           : std_ulogic;
+    signal  tag             : std_ulogic_vector(7 downto 0);
 
 begin
     UUT: entity work.cache_block 

@@ -1,6 +1,6 @@
 --< CACHE_BLOCK >------------------------------------------------------------------------------
 library ieee;
-use ieee.std_logic_1164.all;
+use ieee.std_ulogic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| A paramentric cache block responsible for keeping track of tags which currently are 
@@ -14,13 +14,13 @@ use ieee.numeric_std.all;
 entity cache_block is
     generic ( tag_bit_width : positive );
     port (
-        clk : in  std_logic;
+        clk : in  std_ulogic;
 
         tag_query   : in  unsigned(tag_bit_width - 1 downto 0);
-        replace_en  : in  std_logic;
-        reset_valid : in  std_logic;
-        hit         : out std_logic;
-        is_valid    : out std_logic
+        replace_en  : in  std_ulogic;
+        reset_valid : in  std_ulogic;
+        hit         : out std_ulogic;
+        is_valid    : out std_ulogic
     );
 end cache_block;
 
@@ -32,8 +32,8 @@ end cache_block;
 
 architecture cache_block_arch of cache_block is
     signal stored  : unsigned(tag_bit_width - 1 downto 0);
-    signal match   : std_logic;
-    signal valid_s : std_logic := 0;
+    signal match   : std_ulogic;
+    signal valid_s : std_ulogic := 0;
 
 begin
     tag_register : entity d_type_register
