@@ -1,6 +1,6 @@
 --< D_FLIP_FLOP >-------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --| Single bit D-flip-flop.
@@ -29,7 +29,7 @@ end d_flip_flop_arch;
 
 --< T_FLIP_FLOP >-------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --| Simple T-flip-flop
@@ -61,7 +61,7 @@ end t_flip_flop_arch;
 
 --< D_TYPE_REGISTER >---------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+---------------------------------------------------------------------------------------------
 --| Variable size register comprised of an array of single bit D-flip-flops

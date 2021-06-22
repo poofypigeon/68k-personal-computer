@@ -1,22 +1,24 @@
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+use work.one_hot_type.all;
+use work.vector_reduce.or_reduce;
 
 entity binary_encoder is
     generic ( output_width : positive );
     port (
-        input_bus : in  std_ulogic_vector(0 to (2 ** output_width) - 1);
+        input_bus : in  one_hot(0 to (2 ** output_width) - 1);
         encoded   : out unsigned(output_width - 1 downto 0);
         valid     : out std_ulogic
     );
 end binary_encoder;
 
-
 architecture binary_encoder_arch of binary_encoder is
     constant input_width : positive := 2 ** output_width;
 
     type vocab_t is array (0 to output_width - 1, 0 to (input_width / 2) - 1) of natural;
-    type dim_t is array (0 to output_width - 1) of std_ulogic_vector(0 to (input_width / 2) - 1);
+    type signal_matrix_t is array (0 to output_width - 1) of std_ulogic_vector(0 to (input_width / 2) - 1);
 
     function gen_vocab (k, n : positive) return vocab_t is
         type actual_reg_t is array (0 to (input_width / 2) - 1) of natural;
@@ -40,40 +42,25 @@ architecture binary_encoder_arch of binary_encoder is
 
     end function gen_vocab;
 
-    function or_reduce(vec : std_ulogic_vector) return std_ulogic is
-        variable result: std_ulogic;
-    begin
-        for i in vec'range loop
-            if i = vec'left then
-                result := vec(i);
-            else
-                result := result or vec(i);
-            end if;
-            exit when result = '1';
-        end loop;
-        return result;
-    end or_reduce;
-
     constant vocab : vocab_t := gen_vocab(output_width, input_width);
 
-    signal dim : dim_t;
+    signal signal_matrix : signal_matrix_t;
     signal encoded_s : unsigned(output_width - 1 downto 0);
 begin
     cross_conn : for k in 0 to output_width - 1 generate 
-        out_conn : for q in 0 to (n / 2) - 1 generate
-            dim(k)(q) <= input_bus(vocab(k, q)); 
+        out_conn : for q in 0 to (input_width / 2) - 1 generate
+            signal_matrix(k)(q) <= input_bus(vocab(k, q)); 
         end generate out_conn;
     end generate cross_conn;
     
-    encode : process(dim)
+    encode : process(signal_matrix)
     begin
         for k in 0 to output_width - 1 loop
-            encoded_s(k) <= or_reduce(dim(k));
+            encoded_s(k) <= or_reduce(signal_matrix(k));
         end loop;
     end process encode;
 
-    valid <= or_reduce(input_bus);
-
+    valid   <= or_reduce(input_bus);
     encoded <= encoded_s;
 
 end binary_encoder_arch;

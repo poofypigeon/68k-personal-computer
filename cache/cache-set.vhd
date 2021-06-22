@@ -1,6 +1,6 @@
 --< CACHE_SET >--------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 use work.vector_reduce.or_reduce;

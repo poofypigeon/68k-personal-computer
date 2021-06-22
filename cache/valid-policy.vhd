@@ -1,8 +1,9 @@
 --< VALID_POLICY >------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.one_hot_type.all
 use work.vector_reduce.and_reduce;
 --+---------------------------------------------------------------------------------------------
 --| Cascading logic to sequentially fill all blocks in a set with valid data before turning 
@@ -20,14 +21,14 @@ entity valid_policy is
     port (
         all_blocks_valid : out std_ulogic;
         valid_blocks     : in  std_ulogic_vector(0 to block_id_bit_width - 1);
-        block_to_replace : out std_ulogic_vector(0 to block_id_bit_width - 1)
+        block_to_replace : out one_hot(0 to block_id_bit_width - 1)
     );
 end valid_policy;
 
 -- Will this synthesize as expected? Do I need to make entites and use generate instead?
 
 architecture valid_policy_arch of valid_policy is
-    signal block_to_replace_s : std_ulogic_vector(0 to block_id_bit_width - 1);
+    signal block_to_replace_s : one_hot(0 to block_id_bit_width - 1);
 
 begin
     update : process(valid_block_bits)
@@ -52,8 +53,7 @@ begin
     end process update;
 
     -- signal to arbitrate replacement policy once all blocks are valid
-    all_blocks_valid <= '1' when and_reduce(valid_blocks) = '1'
-                   else '0';
+    all_blocks_valid <= and_reduce(valid_blocks);
     block_to_replace <= block_to_replace_s;
 
 end valid_policy_arch;

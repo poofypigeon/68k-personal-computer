@@ -1,6 +1,6 @@
 --< CACHE_BLOCK >------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| A paramentric cache block responsible for keeping track of tags which currently are 

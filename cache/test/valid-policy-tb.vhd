@@ -1,7 +1,9 @@
 --< VALID_POLICY_TB >---------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+use work.vector_to_string.all;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------
@@ -15,20 +17,6 @@ architecture valid_policy_tb_arch of valid_policy_tb is
     signal all_blocks_valid : std_ulogic;
     signal valid_block_bits : std_ulogic_vector(0 to 15);
     signal block_to_replace : std_ulogic_vector(0 to 15);
-
-    -- This function was borrowed from Botond Sándor Kirei on Stack Overflow becuase I could not 
-    -- be arsed to write it myself.
-    -- >>> https://stackoverflow.com/a/38850022
-    function to_string ( a: std_ulogic_vector) return string is
-        variable b : string (1 to a'length) := (others => NUL);
-        variable stri : integer := 1; 
-        begin
-            for i in a'range loop
-                b(stri) := std_ulogic'image(a(i))(2);
-            stri := stri+1;
-            end loop;
-        return b;
-    end function;
 
 begin
     UUT : entity work.valid_policy 

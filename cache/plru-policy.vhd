@@ -1,7 +1,9 @@
 --< PLRU_ROOT >--------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+use work.one_hot_type.all;
 --+--------------------------------------------------------------------------------------------
 --| Root node which sits at the root of the Pseudo Least Recently Used binary tree structure. 
 --| ---
@@ -41,7 +43,7 @@ end plru_root_arch;
 
 --< PLRU_NODE >--------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| Node which is structurally connected to each recursive iteration of the Pseudo Least
@@ -94,7 +96,7 @@ end plru_node_arch;
 
 --< PLRU_RECURSIVE >---------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| A recursive structure for dynamically generating a Pseudo Least Recently Used replacement
@@ -187,7 +189,7 @@ end plru_recursive_arch;
 
 --< PLRU_POLICY >------------------------------------------------------------------------------
 library ieee;
-use ieee.std_ulogic_1164.all;
+use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 --+--------------------------------------------------------------------------------------------
 --| Assembles the discrete elements which comprise the Pseudo Least Recently Used policy into
@@ -198,8 +200,8 @@ entity plru_policy is
     port (
         clk : in std_ulogic;
         
-        toggle_in   : in  std_ulogic_vector(0 to (2 ** height) - 1);
-        replace_out : out std_ulogic_vector(0 to (2 ** height) - 1)
+        toggle_in        : in  std_ulogic_vector(0 to (2 ** height) - 1);
+        block_to_replace : out one_hot(0 to (2 ** height) - 1)
     );
 end plru_policy;
 
@@ -224,7 +226,7 @@ begin
             toggle_in  => toggle_in,
 
             replace_in  => root_replace_s,
-            replace_out => replace_out
+            replace_out => block_to_replace
         );
 
 end plru_policy_arch;
