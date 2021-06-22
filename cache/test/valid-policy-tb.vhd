@@ -4,6 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 use work.vector_to_string.all;
+use work.one_hot_type.all;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------
@@ -15,48 +16,49 @@ architecture valid_policy_tb_arch of valid_policy_tb is
     constant period : time := 20 ns;
 
     signal all_blocks_valid : std_ulogic;
-    signal valid_block_bits : std_ulogic_vector(0 to 15);
-    signal block_to_replace : std_ulogic_vector(0 to 15);
+    signal valid_blocks     : std_ulogic_vector(0 to 15);
+    signal block_to_replace : one_hot(0 to 15);
 
 begin
     UUT : entity work.valid_policy 
+        generic map ( output_bundle_width => 16 )
         port map (
             all_blocks_valid => all_blocks_valid, 
-            valid_block_bits => valid_block_bits, 
+            valid_blocks     => valid_blocks,
             block_to_replace => block_to_replace
         );
 
     process
     begin
-        valid_block_bits <= x"0000";
+        valid_blocks <= x"0000";
         wait for period;
 
-        -- for all states of valid_block_bits
+        -- for all states of valid_blocks
         for i in 0 to 15 loop
             -- for all bits in block_to_replace
             for j in 0 to 15 loop
                 if j = i then
-                    -- enabled block_to_replace bit for a given valid_block_bits input
+                    -- enabled block_to_replace bit for a given valid_blocks input
                     assert block_to_replace(j) = '1'
                     report "FAILED: block_to_replace(" & integer'image(j)
-                         & ") = '1' when valid_block_bits = " & to_string(valid_block_bits)
+                         & ") = '1' when valid_blocks = " & to_string(valid_blocks)
                     severity error;
                 else
-                    -- disabled block_to_replace bits for a given valid_block_bits input
+                    -- disabled block_to_replace bits for a given valid_blocks input
                     assert block_to_replace(j) = '0'
                     report "FAILED: block_to_replace(" & integer'image(j)
-                         & ") = '0' when valid_block_bits = " & to_string(valid_block_bits)
+                         & ") = '0' when valid_blocks = " & to_string(valid_blocks)
                     severity error;
                 end if;
             end loop;
-            -- update to next valid_block_bits state
-            valid_block_bits(i) <= '1';
+            -- update to next valid_blocks state
+            valid_blocks(i) <= '1';
             wait for period;
         end loop;
 
-        -- block_to_replace = x"0000" when valid_block_bits = x"FFFF"
+        -- block_to_replace = x"0000" when valid_blocks = x"FFFF"
         assert block_to_replace = x"0000"
-        report "FAILED: block_to_replace = x""0000"" when valid_block_bits = x""FFFF""" 
+        report "FAILED: block_to_replace = x""0000"" when valid_blocks = x""FFFF""" 
         severity error;
 
         -- all_blocks_valid = '1' when block_to_replace = x"0000"

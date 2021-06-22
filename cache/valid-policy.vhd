@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.one_hot_type.all
+use work.one_hot_type.all;
 use work.vector_reduce.and_reduce;
 --+---------------------------------------------------------------------------------------------
 --| Cascading logic to sequentially fill all blocks in a set with valid data before turning 
@@ -14,46 +14,36 @@ use work.vector_reduce.and_reduce;
 --| which blocks become valid. Becuase validity can only be reset for an entire set of blocks at
 --| once, the behaviour of this component can be defined with the knowledge that the valid
 --| blocks in a set can never be fragmented if tags are assigned to blocks in a fixed order.
---| This allows this component to have a simple cascading flow.
+--| This allows this component to have a simple cascading flow. Were fragmentation a factor,
+--| this difficulty could be overcome by using a traditional priority resolving circuit.
+--|
+--| ~NOTE : this component should be considered in the case that propogation delay proves to be
+--|         an issue when synthesizing. A parallel solution could be implemented at the cost
+--|         of more gates.
 --+---------------------------------------------------------------------------------------------
 entity valid_policy is
-    generic ( block_id_bit_width : positive )
+    generic ( output_bundle_width : positive );
     port (
         all_blocks_valid : out std_ulogic;
-        valid_blocks     : in  std_ulogic_vector(0 to block_id_bit_width - 1);
-        block_to_replace : out one_hot(0 to block_id_bit_width - 1)
+        valid_blocks     : in  std_ulogic_vector(0 to output_bundle_width - 1);
+        block_to_replace : out one_hot(0 to output_bundle_width - 1)
     );
 end valid_policy;
 
--- Will this synthesize as expected? Do I need to make entites and use generate instead?
-
 architecture valid_policy_arch of valid_policy is
-    signal block_to_replace_s : one_hot(0 to block_id_bit_width - 1);
-
 begin
-    update : process(valid_block_bits)
-    begin
-        for i in 0 to valid_block_bits'length - 1 loop
-            -- first bit - no dependency on previous bits
-            if i = 0 then
-                if valid_block_bits(i) = '0' then
-                    block_to_replace_s(i) <= '1';
-                else 
-                    block_to_replace_s(i) <= '0';
-                end if;
-            -- other bits - dependant on previous bits
-            else
-                if valid_block_bits(i - 1) = '1' and valid_block_bits(i) = '0' then
-                    block_to_replace_s(i) <= '1';
-                else 
-                    block_to_replace_s(i) <= '0';
-                end if;
-            end if;
-        end loop;
-    end process update;
+    priority : for i in 0 to output_bundle_width - 1 generate
+        first_bit : if i = 0 generate
+            block_to_replace(i) <= not valid_blocks(i);
+        end generate first_bit;
+
+        other_bits : if i > 0 generate
+             block_to_replace(i) <= valid_blocks(i - 1) and not valid_blocks(i);
+        end generate other_bits;
+            
+    end generate priority;
 
     -- signal to arbitrate replacement policy once all blocks are valid
     all_blocks_valid <= and_reduce(valid_blocks);
-    block_to_replace <= block_to_replace_s;
 
 end valid_policy_arch;
