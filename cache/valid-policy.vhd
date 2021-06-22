@@ -22,8 +22,17 @@ entity valid_policy is
     );
 end valid_policy;
 
+-- Will this synthesize as expected? Do I need to make entites and use generate instead?
+
 architecture valid_policy_arch of valid_policy is
     signal block_to_replace_s : std_logic_vector(0 to block_id_bit_width - 1);
+
+    function is_all(vec : std_logic_vector; val : std_logic) return boolean is
+        constant all_bits : std_logic_vector(vec'range) := (others => val);
+    begin
+        return vec = all_bits;
+    end function;
+
 begin
     update : process(valid_block_bits)
     begin
@@ -47,7 +56,7 @@ begin
     end process update;
 
     -- signal to arbitrate replacement policy once all blocks are valid
-    all_blocks_valid <= '1' when to_integer(unsigned(block_to_replace_s)) = 0
+    all_blocks_valid <= '1' when is_all(block_to_replace_s, '0')
                    else '0';
     block_to_replace <= block_to_replace_s;
 
