@@ -3,6 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.one_hot_type_all;
 use work.vector_reduce.or_reduce;
 --+---------------------------------------------------------------------------------------------
 --|
@@ -30,12 +31,12 @@ architecture cache_set_arch of cache_set is
     signal all_blocks_valid_s     : std_ulogic;
     signal query_hit_s            : std_ulogic;
     signal valid_blocks_s         : std_ulogic_vector(0 to block_count - 1);
-    signal valid_policy_replace_s : std_ulogic_vector(0 to block_count - 1);
-    signal plru_policy_replace_s  : std_ulogic_vector(0 to block_count - 1);
-    signal block_to_replace_s     : std_ulogic_vector(0 to block_count - 1);
-    signal replace_en_s           : std_ulogic_vector(0 to block_count - 1);
-    signal hit_block_s            : std_ulogic_vector(0 to block_count - 1);
-    signal block_to_access_s      : std_ulogic_vector(0 to block_count - 1);
+    signal valid_policy_replace_s : one_hot(0 to block_count - 1);
+    signal plru_policy_replace_s  : one_hot(0 to block_count - 1);
+    signal block_to_replace_s     : one_hot(0 to block_count - 1);
+    signal replace_en_s           : one_hot(0 to block_count - 1);
+    signal hit_block_s            : one_hot(0 to block_count - 1);
+    signal block_to_access_s      : one_hot(0 to block_count - 1);
 
 begin
     gen_blocks : for i in 0 to block_count - 1 generate
@@ -79,8 +80,7 @@ begin
 
     pulse_s <= clk and set_is_selected;
 
-    query_hit_s <= '1' when or_reduce(hit_block_s) = '1'
-              else '0';
+    query_hit_s <= or_reduce(hit_block_s);
     query_hit   <= query_hit_s and set_is_selected;
 
     block_to_replace_s <= valid_policy_replace_s when all_blocks_valid_s = '0'
@@ -89,5 +89,4 @@ begin
                      else block_to_replace_s;
     replace_en_s       <= block_to_replace_s when query_hit_s = '0'
                      else (others => '0');
-        
 end cache_set_arch;

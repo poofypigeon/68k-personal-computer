@@ -11,7 +11,7 @@ end binary_encoder_tb;
 
 architecture binary_encoder_tb_arch of binary_encoder_tb is
     constant period : time := 20 ns;
-    constant k : positive := 4;
+    constant k      : positive := 4;
 
     signal input_bus : one_hot(0 to (2 ** k) - 1);
     signal encoded   : unsigned( k - 1 downto 0 );

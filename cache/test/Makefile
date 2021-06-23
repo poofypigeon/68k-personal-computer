@@ -1,4 +1,4 @@
-vpath %.vhd ..
+vpath %.vhd .. ../pkg
 
 GHDL = ghdl
 
