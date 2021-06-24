@@ -2,6 +2,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+library user_library;
+use user_library.d_type_register;
 --+--------------------------------------------------------------------------------------------
 --| A paramentric cache block responsible for keeping track of tags which currently are 
 --| represented in a larger cache set.
@@ -31,9 +34,9 @@ end cache_block;
 --+--------------------------------------------+
 
 architecture cache_block_arch of cache_block is
-    signal stored  : unsigned(tag_bit_width - 1 downto 0);
+    signal stored  : std_ulogic_vector(tag_bit_width - 1 downto 0);
     signal match   : std_ulogic;
-    signal valid_s : std_ulogic := 0;
+    signal valid_s : std_ulogic := '0';
 
 begin
     tag_register : entity d_type_register
@@ -41,21 +44,21 @@ begin
     port map (
         clk => clk,
         en  => replace_en,
-        d   => tag_query,
+        d   => std_ulogic_vector(tag_query),
         q   => stored
     );
 
-    match <= '1' when tag_query = stored
+    match <= '1' when tag_query = unsigned(stored)
         else '0';
     hit   <=   match and valid_s;
 
-    set_valid : process(clk, reset)
+    set_valid : process(clk, reset_valid)
     begin
-        if reset_valid = '1'
+        if reset_valid = '1' then
             valid_s <= '0';
-        elsif rising_edge(clk) and replace_en = '1'
+        elsif rising_edge(clk) and replace_en = '1' then
             valid_s <= '1';
-        end if
+        end if;
     end process set_valid;
 
     is_valid <= valid_s;

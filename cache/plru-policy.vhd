@@ -3,7 +3,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.one_hot_type.all;
+library user_library;
+use user_library.t_flip_flop;
 --+--------------------------------------------------------------------------------------------
 --| Root node which sits at the root of the Pseudo Least Recently Used binary tree structure. 
 --| ---
@@ -24,7 +25,7 @@ architecture plru_root_arch of plru_root is
     signal state_s : std_ulogic;
 
 begin
-    state : entity work.t_flip_flop
+    state : entity t_flip_flop
         generic map ( initial => '0' )
         port map (
             clk => clk,
@@ -45,6 +46,9 @@ end plru_root_arch;
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+library user_library;
+use user_library.t_flip_flop;
 --+--------------------------------------------------------------------------------------------
 --| Node which is structurally connected to each recursive iteration of the Pseudo Least
 --| Recently Used binary tree. 
@@ -75,7 +79,7 @@ architecture plru_node_arch of plru_node is
     signal state_s  : std_ulogic;
 
 begin
-    state : entity work.t_flip_flop
+    state : entity t_flip_flop
         generic map ( initial => '0' )
         port map (
             clk => clk,
@@ -191,6 +195,9 @@ end plru_recursive_arch;
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+library user_library;
+use user_library.one_hot_type.all;
 --+--------------------------------------------------------------------------------------------
 --| Assembles the discrete elements which comprise the Pseudo Least Recently Used policy into
 --| a usable component.

@@ -3,8 +3,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.one_hot_type_all;
-use work.vector_reduce.or_reduce;
+library user_library;
+use user_library.one_hot_type.all;
+use user_library.binary_encoder;
+use user_library.vector_reduce.or_reduce;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------
@@ -19,7 +21,7 @@ entity cache_set is
         set_is_selected : in  std_ulogic;
         reset_valid     : in  std_ulogic;
         query_hit       : out std_ulogic;
-        tag_query       : in  unsigned(tag_bit_width - 1 downto 0)
+        tag_query       : in  unsigned(tag_bit_width - 1 downto 0);
         hit_block_id    : out unsigned(block_id_bit_width - 1 downto 0)
     );
 end cache_set;
@@ -43,10 +45,10 @@ begin
         block_instance : entity work.cache_block
             generic map ( tag_bit_width => tag_bit_width )
             port map ( 
-                clk => pulse_s;
+                clk => pulse_s,
 
                 tag_query   => tag_query,
-                replace_en  => replace_en_s,
+                replace_en  => replace_en_s(i),
                 reset_valid => reset_valid,
                 hit         => hit_block_s(i),
                 is_valid    => valid_blocks_s(i)
@@ -54,7 +56,7 @@ begin
     end generate gen_blocks;
     
     init_policy : entity work.valid_policy
-        generic map ( block_id_bit_width => block_id_bit_width )
+        generic map ( output_bundle_width => block_id_bit_width )
         port map (
             all_blocks_valid => all_blocks_valid_s,
             valid_blocks     => valid_blocks_s,
@@ -66,11 +68,11 @@ begin
         port map (
             clk => pulse_s,
         
-            toggle_in   => block_to_access_s,
-            replace_out => plru_policy_replace_s
+            toggle_in        => block_to_access_s,
+            block_to_replace => plru_policy_replace_s
         );
 
-    encoder : entity work.binary_encoder
+    encoder : entity binary_encoder
         generic map ( output_width => block_id_bit_width )
         port map (
             input_bus => block_to_access_s,

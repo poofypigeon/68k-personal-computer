@@ -3,8 +3,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.vector_to_string.all;
-use work.one_hot_type.all;
+library user_library;
+use user_library.vector_to_string.all;
+use user_library.one_hot_type.all;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------

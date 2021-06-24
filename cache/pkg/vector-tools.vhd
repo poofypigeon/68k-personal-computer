@@ -40,6 +40,10 @@ package body vector_reduce is
 end package body vector_reduce;
 
 
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
 package vector_string is
     function to_string (vec : std_ulogic_vector) return string;
     
