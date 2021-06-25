@@ -19,6 +19,15 @@ STD = 93c
 # option flags
 OPTS = --std=$(STD)
 
+work : WORK 	= work
+work : FILES 	= 	one-hot.vhd 																\
+					vector-tools.vhd 															\
+					encoder.vhd 																\
+					flip-flop.vhd 																\
+					test/encoder-tb.vhd															\
+					test/flip-flop-tb.vhd
+work : $(WORK)-obj93.cf
+
 # default - all libraries
 user_library : WORK = user_library
 user_library : FILES = 	one-hot.vhd 															\
