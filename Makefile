@@ -12,78 +12,70 @@
 # 		(cache-block.vhd, plru-policy.vhd, valid-policy.vhd)
 # TODO these options could be moved to a README file
 
-# library dependency
-LIB = user_library-obj93.cf
-LIB_PATH = pkg/
-LIB_MAKE = user_library.mk
-
 # VHDL compiler
 GHDL = ghdl
 
+# library dependencies
+LIB = user_library-obj93.cf
+LIB_MAKE = user_library.mk
+
+# stimulus dependencies
+STIM_FOLDER 		= test/stimulus/
+vpath %.py $(STIM_FOLDER)
+STIM_FILES 			= plru.stim
+STIM_SCRIPTS_PATH 	= scripts/
+STIM_SCRIPTS 		= plru-stim-gen.py
+
 # option values
 STD = 93c
+LIB_PATH = pkg/
 
 # option flags
-OPTS = --std=$(STD) -P=$(LIB_PATH)
+GHDL_OPTS = --std=$(STD) -P=$(LIB_PATH)
 
-# default - build all files
-cache : WORK 	= work
-cache : FILES 	= cache-block.vhd 						\
-				  valid-policy.vhd 						\
-				  plru-policy.vhd 						\
-				  cache-set.vhd
-cache : $(WORK)-obj93.cf
+.PHONY : work run stim
 
 # build all files and tests
-testing : WORK 	= tests
-testing : STIM  = 
-testing : FILES = cache-block.vhd 						\
-				  valid-policy.vhd 						\
-				  plru-policy.vhd 						\
-				  cache-set.vhd							\
-				  test/cache-block-tb.vhd				\
-				  test/plru-policy-tb.vhd				\
+work : FILES = cache-block.vhd 																	\
+				  valid-policy.vhd 																\
+				  plru-policy.vhd 																\
+				  cache-set.vhd																	\
+				  test/cache-block-tb.vhd														\
+				  test/plru-policy-tb.vhd														\
 				  test/valid-policy-tb.vhd
-testing : $(WORK)-obj93.cf
-
-cache_block : WORK 	= cache_block
-cache_block : FILES = cache-block.vhd
-cache_block : $(WORK)-obj93.cf
-
-plru_policy : WORK 	= plru_policy
-plru_policy : FILES = plru-policy.vhd
-plru_policy : $(WORK)-obj93.cf
-
-valid_policy : WORK = valid_policy
-valid_policy : FILES = valid-policy.vhd
-valid_policy : $(WORK)-obj93.cf
-
-cache_set : WORK = cache_set
-cache_set : FILES = cache-block.vhd 					\
-					valid-policy.vhd 					\
-					plru-policy.vhd 					\
-					cache-set.vhd
-cache_set : $(WORK)-obj93.cf
-
-# TODO Generate stimulus from script automagically (may be in old commits)
-
-
-.PHONY : run
+work : work-obj93.cf
 
 run : # FIXME
-	ghdl -r --work=tests -P=pkg plru_policy_tb --stop-time=200ns
+	ghdl -r -P=pkg plru_policy_tb --stop-time=200ns
 
 # build library dependancy
 $(LIB) :
-	@echo "Building $(LIB)..."
 	@(cd $(LIB_PATH) && make -f $(LIB_MAKE))
 
+$(STIM_FOLDER) :
+	mkdir $(STIM_FOLDER)
+
+stim : $(STIM_FOLDER)
+	@for script in $(STIM_SCRIPTS);																\
+	do																							\
+		(cd $(STIM_FOLDER) && python3 ../../$(STIM_SCRIPTS_PATH)$$script > /dev/null);			\
+	done;
+
 # analysis
-$(WORK)-obj93.cf : $(LIB) $(FILES)
+work-obj93.cf : stim $(LIB) $(FILES)
+	@echo "\nBuilding work-obj93.cf..."
 	@echo "Analyzing files...";
-	@for file in $(FILES);								\
-	do													\
-		echo " > \033[0;36m$$file\033[0m" ; 			\
-		$(GHDL) -a --work=$(WORK) $(OPTS) $$file ; 		\
-	done ;
-	@echo "Analysis finished : $(WORK)-obj93.cf"
+	@for file in $(FILES);																		\
+	do																							\
+		echo " > \033[0;36m$$file\033[0m"; 														\
+		if ! $(GHDL) -a $(GHDL_OPTS) $$file; 													\
+		then 																					\
+			declare SUCCESS=1;																	\
+			rm work-obj93.cf;																	\
+			break;																				\
+		fi;																						\
+	done;																						\
+	if [[ $$SUCCESS -eq 0 ]]; 																	\
+	then 																						\
+		echo "Analysis finished : work-obj93.cf"; 												\
+	fi;

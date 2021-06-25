@@ -40,7 +40,7 @@ begin
 
         type stimulus_file_type is file of integer;
         file stimulus_file : stimulus_file_type 
-            open read_mode is "test/stimulus/plru-stimulus";
+            open read_mode is "test/stimulus/plru.stim";
 
         variable i             : integer;
         variable temp_stimulus : stimulus;

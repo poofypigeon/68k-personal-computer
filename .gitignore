@@ -1,3 +1,5 @@
+# simulation files
 *.cf
 *.fst
-*.txt
+# script generated stimulus files
+stimulus/

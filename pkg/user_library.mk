@@ -47,6 +47,7 @@ flip_flop 	 : $(WORK)-obj93.cf
 
 # analysis
 $(WORK)-obj93.cf : $(FILES)
+	@echo "\nBuilding $(WORK)-obj93.cf..."
 	@echo "Analyzing files...";
 	@for file in $(FILES); 								\
 	do													\

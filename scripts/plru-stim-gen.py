@@ -51,7 +51,7 @@ class plru_tree:
 if __name__ == "__main__":
     tree = plru_tree(height = 4)
 
-    file = open("plru-stimulus", 'wb')
+    file = open("plru.stim", 'wb')
     file_data = []
 
     for _ in range(2048):
