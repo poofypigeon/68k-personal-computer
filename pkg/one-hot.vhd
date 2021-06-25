@@ -7,7 +7,7 @@ package one_hot is
 
     function to_integer (signal_bus : one_hot) return integer;
 
-    function to_one_hot (value, size : positive) return one_hot;
+    function to_one_hot (value, size : natural) return one_hot;
 
 end package one_hot;
 
@@ -22,7 +22,7 @@ package body one_hot is
                 return -1;
     end function to_integer;
 
-    function to_one_hot (value, size : positive) return one_hot is
+    function to_one_hot (value, size : natural) return one_hot is
         variable result : one_hot(0 to size - 1);
     begin
         for i in 0 to result'length - 1 loop 

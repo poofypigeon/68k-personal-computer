@@ -33,7 +33,7 @@ LIB_PATH = pkg/
 # option flags
 GHDL_OPTS = --std=$(STD) -P=$(LIB_PATH)
 
-.PHONY : work run stim
+.PHONY : work run stim clean
 
 # build all files and tests
 work : FILES = cache-block.vhd 																	\
@@ -45,21 +45,47 @@ work : FILES = cache-block.vhd 																	\
 				  test/valid-policy-tb.vhd
 work : work-obj93.cf
 
-run : # FIXME
-	ghdl -r -P=pkg plru_policy_tb --stop-time=200ns
+run :
+ifeq ($(strip $(UNIT)), )
+	@echo "UNIT not found. Use UNIT=<value>."
+	@exit 1;
+endif
+ifeq ($(strip $(STOP_TIME)), )
+	@echo "STOP_TIME time not found. Use STOP_TIME=<value>.""
+	@exit 1;
+endif
+	$(GHDL) --elab-run -P=$(LIB_PATH) $(UNIT)_tb --stop-time=$(STOP_TIME) --fst=out.fst --assert-level=error
 
 # build library dependancy
 $(LIB) :
-	@(cd $(LIB_PATH) && make -f $(LIB_MAKE))
+	@(cd $(LIB_PATH) && make -f $(LIB_MAKE) || if [[ -f "work-obj93.cf" ]]; then rm work-obj93.cf; fi;)
+	@if [[ ! -f "work-obj93.cf" ]] && [[ ! -f "pkg/user_library-obj93.cf" ]]; 					\
+	then																						\
+		rm -r test/stimulus;																	\
+		exit 1;																					\
+	fi;
 
 $(STIM_FOLDER) :
 	mkdir $(STIM_FOLDER)
 
 stim : $(STIM_FOLDER)
+	@echo "\nRunning stimulus generation scripts..."
 	@for script in $(STIM_SCRIPTS);																\
 	do																							\
-		(cd $(STIM_FOLDER) && python3 ../../$(STIM_SCRIPTS_PATH)$$script > /dev/null);			\
-	done;
+		declare SUCCESS=0;																		\
+		echo " > \033[0;36m$$script\033[0m";													\
+		(cd $(STIM_FOLDER) && 																	\
+		if ! python3 ../../$(STIM_SCRIPTS_PATH)$$script > stim_ascii.txt;						\
+		then																					\
+			declare SUCCESS=1;																	\
+			rm -r ../test/stimulus;																\
+			break;																				\
+		fi); 																					\
+	done;																						\
+	if [[ $$SUCCESS -eq 0 ]]; 																	\
+	then 																						\
+		echo "Stimulus generation finished"; 													\
+	fi;
 
 # analysis
 work-obj93.cf : stim $(LIB) $(FILES)
@@ -67,11 +93,13 @@ work-obj93.cf : stim $(LIB) $(FILES)
 	@echo "Analyzing files...";
 	@for file in $(FILES);																		\
 	do																							\
+		declare SUCCESS=0;																		\
 		echo " > \033[0;36m$$file\033[0m"; 														\
 		if ! $(GHDL) -a $(GHDL_OPTS) $$file; 													\
 		then 																					\
-			declare SUCCESS=1;																	\
-			rm work-obj93.cf;																	\
+			SUCCESS=1;																			\
+			if [ -d ../test/stimulus ]; then rm -r ../test/stimulus; fi;						\
+			if [ -f "work-obj93.cf" ]; then rm work-obj93.cf; fi;								\
 			break;																				\
 		fi;																						\
 	done;																						\
@@ -79,3 +107,9 @@ work-obj93.cf : stim $(LIB) $(FILES)
 	then 																						\
 		echo "Analysis finished : work-obj93.cf"; 												\
 	fi;
+
+clean :
+	@if [ -d test/stimulus ]; then rm -r test/stimulus; fi
+	@if [ -f out.fst ]; then rm out.fst; fi
+	@if [ -f *.cf ]; then rm *.cf; fi
+	@if [ -f **/*.cf ]; then rm **/*.cf; fi

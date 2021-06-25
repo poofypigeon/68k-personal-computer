@@ -21,9 +21,9 @@ OPTS = --std=$(STD)
 
 # default - all libraries
 user_library : WORK = user_library
-user_library : FILES = 	one-hot.vhd 					\
-						vector-tools.vhd 				\
-						encoder.vhd 					\
+user_library : FILES = 	one-hot.vhd 															\
+						vector-tools.vhd 														\
+						encoder.vhd 															\
 						flip-flop.vhd 		
 user_library : $(WORK)-obj93.cf
 
@@ -36,8 +36,8 @@ vector_tools : FILES = vector-tools.vhd
 vector_tools : $(WORK)-obj93.cf
 
 encoder 	 : WORK = encoder
-encoder 	 : FILES = 	one-hot.vhd						\
-						vector-tools.vhd 				\
+encoder 	 : FILES = 	one-hot.vhd																\
+						vector-tools.vhd 														\
 						encoder.vhd
 encoder 	 : $(WORK)-obj93.cf
 
@@ -49,10 +49,16 @@ flip_flop 	 : $(WORK)-obj93.cf
 $(WORK)-obj93.cf : $(FILES)
 	@echo "\nBuilding $(WORK)-obj93.cf..."
 	@echo "Analyzing files...";
-	@for file in $(FILES); 								\
-	do													\
-		echo " > \033[0;36m$$file\033[0m" ; 			\
-		$(GHDL) -a --work=$(WORK) $(OPTS) $$file ; 		\
-	done ;
-	@echo "Analysis finished : $(WORK)-obj93.cf"
-
+	@for file in $(FILES); 																		\
+	do																							\
+		declare SUCCESS=0	;																	\
+		echo " > \033[0;36m$$file\033[0m" ; 													\
+		if ! $(GHDL) -a --work=$(WORK) $(OPTS) $$file; 											\
+		then 																					\
+			SUCCESS=1;																			\
+			if [ -f "$(WORK)-obj93.cf" ]; then rm $(WORK)-obj93.cf; fi;							\
+			break;																				\
+		fi;																						\
+	done; 																						\
+	if [[ $$SUCCESS -eq 1 ]]; then exit 1; fi;
+	@echo "Analysis finished : $(WORK)-obj93.cf";
