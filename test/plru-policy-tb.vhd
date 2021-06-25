@@ -71,7 +71,8 @@ begin
             i := i + 1;
         end loop;
 
-        wait; -- finish test
+        -- finish test
+        wait; 
     end process;
     
 end plru_policy_tb_arch;

@@ -45,17 +45,6 @@ work : FILES = cache-block.vhd 																	\
 				  test/valid-policy-tb.vhd
 work : work-obj93.cf
 
-run :
-ifeq ($(strip $(UNIT)), )
-	@echo "UNIT not found. Use UNIT=<value>."
-	@exit 1;
-endif
-ifeq ($(strip $(STOP_TIME)), )
-	@echo "STOP_TIME time not found. Use STOP_TIME=<value>.""
-	@exit 1;
-endif
-	$(GHDL) --elab-run -P=$(LIB_PATH) $(UNIT)_tb --stop-time=$(STOP_TIME) --fst=out.fst --assert-level=error
-
 # build library dependancy
 $(LIB) :
 	@(cd $(LIB_PATH) && make -f $(LIB_MAKE) || if [[ -f "work-obj93.cf" ]]; then rm work-obj93.cf; fi;)
@@ -65,9 +54,11 @@ $(LIB) :
 		exit 1;																					\
 	fi;
 
+# make stimulus folder if it doesn't exist
 $(STIM_FOLDER) :
 	mkdir $(STIM_FOLDER)
 
+# run Python scripts to generate stimulus files
 stim : $(STIM_FOLDER)
 	@echo "\nRunning stimulus generation scripts..."
 	@for script in $(STIM_SCRIPTS);																\
@@ -87,7 +78,7 @@ stim : $(STIM_FOLDER)
 		echo "Stimulus generation finished"; 													\
 	fi;
 
-# analysis
+# analyses all of the files
 work-obj93.cf : stim $(LIB) $(FILES)
 	@echo "\nBuilding work-obj93.cf..."
 	@echo "Analyzing files...";
@@ -108,6 +99,15 @@ work-obj93.cf : stim $(LIB) $(FILES)
 		echo "Analysis finished : work-obj93.cf"; 												\
 	fi;
 
+# I don't like typing
+run :
+ifeq ($(strip $(UNIT)), )
+	@echo "UNIT not found. Use UNIT=<value>."
+	@exit 1;
+endif
+	$(GHDL) --elab-run -P=$(LIB_PATH) $(UNIT)_tb --fst=out.fst --assert-level=error
+
+# get rid of it
 clean :
 	@if [ -d test/stimulus ]; then rm -r test/stimulus; fi
 	@if [ -f out.fst ]; then rm out.fst; fi

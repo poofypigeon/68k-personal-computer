@@ -19,6 +19,8 @@ STD = 93c
 # option flags
 OPTS = --std=$(STD)
 
+.PHONY : work user_library one_hot vector_tools encoder flip_flop run clean
+
 work : WORK 	= work
 work : FILES 	= 	one-hot.vhd 																\
 					vector-tools.vhd 															\
@@ -54,7 +56,7 @@ flip_flop 	 : WORK = flip_flop
 flip_flop 	 : FILES = flip-flop.vhd
 flip_flop 	 : $(WORK)-obj93.cf
 
-# analysis
+# analyses all of the files
 $(WORK)-obj93.cf : $(FILES)
 	@echo "\nBuilding $(WORK)-obj93.cf..."
 	@echo "Analyzing files...";
@@ -71,3 +73,18 @@ $(WORK)-obj93.cf : $(FILES)
 	done; 																						\
 	if [[ $$SUCCESS -eq 1 ]]; then exit 1; fi;
 	@echo "Analysis finished : $(WORK)-obj93.cf";
+
+# still don't like typing
+run :
+ifeq ($(strip $(UNIT)), )
+	@echo "UNIT not found. Use UNIT=<value>."
+	@exit 1;
+endif
+	$(GHDL) --elab-run $(UNIT)_tb --fst=out.fst --assert-level=error
+
+# ooooh squeaky clean
+clean :
+	@if [ -f out.fst ]; then rm out.fst; fi
+	@if [ -f *.cf ]; then rm *.cf; fi
+	@if [ -f **/*.cf ]; then rm **/*.cf; fi
+

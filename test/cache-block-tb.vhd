@@ -69,6 +69,9 @@ begin
         -- assert that hit is not reported with invalid data
         assert(hit = '0')
         report "Failed to miss with valid bit off." severity error;
+
+        -- finish test
+        wait;
     end process;
     
 end cache_block_tb_arch;

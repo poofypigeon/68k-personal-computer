@@ -4,3 +4,5 @@
 *.txt
 # script generated stimulus files
 stimulus/
+# this stupid thing
+.DS_STORE
