@@ -27,9 +27,9 @@ OPTS = --std=${STD}
 
 # default - all libraries
 user_library : WORK = ${USR_LIB}
-user_library : FILES = 	one-hot-type.vhd 	\
-						vector-tools.vhd 	\
-						encoder.vhd 		\
+user_library : FILES = 	one-hot-type.vhd 				\
+						vector-tools.vhd 				\
+						encoder.vhd 					\
 						flip-flop.vhd 		
 user_library : user_library-obj93.cf
 
@@ -42,8 +42,8 @@ vector_tools : FILES = vector-tools.vhd
 vector_tools : vector_tools-obj93.cf
 
 encoder 	 : WORK = ${ENCODER}
-encoder 	 : FILES = 	one-hot-type.vhd	\
-						vector-tools.vhd 	\
+encoder 	 : FILES = 	one-hot-type.vhd				\
+						vector-tools.vhd 				\
 						encoder.vhd
 encoder 	 : encoder-obj93.cf
 
@@ -54,7 +54,7 @@ flip_flop 	 : flip_flop-obj93.cf
 # analysis
 %-obj93.cf : ${FILES}
 	@echo "Analyzing files...";
-	@for file in ${FILES}; 									\
+	@for file in ${FILES}; 								\
 	do													\
 		echo " > \033[0;36m$$file\033[0m" ; 			\
 		${GHDL} -a --work=${WORK} ${OPTS} $$file ; 		\

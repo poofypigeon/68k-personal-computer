@@ -35,9 +35,9 @@ CACHE_SET    	= cache_set
 
 # default - build all files
 work : WORK 	= work
-work : FILES 	= cache-block.vhd 		\
-				  valid-policy.vhd 		\
-				  plru-policy.vhd 		\
+work : FILES 	= cache-block.vhd 						\
+				  valid-policy.vhd 						\
+				  plru-policy.vhd 						\
 				  cache-set.vhd
 work : work-obj93.cf
 
@@ -54,9 +54,9 @@ valid_policy : FILES = valid-policy.vhd
 valid_policy : valid_policy-obj93.cf
 
 cache_set : WORK = ${CACHE_SET}
-cache_set : FILES = cache-block.vhd 	\
-					valid-policy.vhd 	\
-					plru-policy.vhd 	\
+cache_set : FILES = cache-block.vhd 					\
+					valid-policy.vhd 					\
+					plru-policy.vhd 					\
 					cache-set.vhd
 cache_set : cache_set-obj93.cf
 
