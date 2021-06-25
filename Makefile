@@ -9,7 +9,7 @@ LIB_MAKE = user_library.mk
 STIM_FOLDER 		= test/stimulus/
 vpath %.py $(STIM_FOLDER)
 STIM_FILES 			= plru.stim
-STIM_SCRIPTS_PATH 	= scripts/
+STIM_SCRIPTS_PATH 	= test/scripts/
 STIM_SCRIPTS 		= plru_stim_gen.py
 
 # option values
@@ -52,7 +52,7 @@ stim : $(STIM_FOLDER)
 		declare SUCCESS=0;																		\
 		echo " > \033[0;36m$$script\033[0m";													\
 		(cd $(STIM_FOLDER) && 																	\
-		if ! python3 ../../$(STIM_SCRIPTS_PATH)$$script > stim_ascii.txt;						\
+		if ! python3 ../$(STIM_SCRIPTS_PATH)$$script > stim_ascii.txt;						\
 		then																					\
 			declare SUCCESS=1;																	\
 			rm -r ../test/stimulus;																\
