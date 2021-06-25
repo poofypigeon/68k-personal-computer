@@ -1,17 +1,3 @@
-# FIXME structure this all better and comments n' stuff
-# > make [work]
-# 		build all modules
-# > make cache_block
-# 		build cache-block.vhd only
-# > make plru_policy
-# 		build plru-policy.vhd only
-# > make valid_policy
-# 		build valid-policy.vhd only
-# > make flip_flop
-# 		build library for flip_flop and its dependencies 
-# 		(cache-block.vhd, plru-policy.vhd, valid-policy.vhd)
-# TODO these options could be moved to a README file
-
 # VHDL compiler
 GHDL = ghdl
 
@@ -24,7 +10,7 @@ STIM_FOLDER 		= test/stimulus/
 vpath %.py $(STIM_FOLDER)
 STIM_FILES 			= plru.stim
 STIM_SCRIPTS_PATH 	= scripts/
-STIM_SCRIPTS 		= plru-stim-gen.py
+STIM_SCRIPTS 		= plru_stim_gen.py
 
 # option values
 STD = 93c
@@ -36,13 +22,13 @@ GHDL_OPTS = --std=$(STD) -P=$(LIB_PATH)
 .PHONY : work run stim clean
 
 # build all files and tests
-work : FILES = cache-block.vhd 																	\
-				  valid-policy.vhd 																\
-				  plru-policy.vhd 																\
-				  cache-set.vhd																	\
-				  test/cache-block-tb.vhd														\
-				  test/plru-policy-tb.vhd														\
-				  test/valid-policy-tb.vhd
+work : FILES = cache_block.vhd 																	\
+				  valid_policy.vhd 																\
+				  plru_policy.vhd 																\
+				  cache_set.vhd																	\
+				  test/cache_block_tb.vhd														\
+				  test/plru_policy_tb.vhd														\
+				  test/valid_policy_tb.vhd
 work : work-obj93.cf
 
 # build library dependancy
