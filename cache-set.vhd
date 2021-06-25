@@ -4,9 +4,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library user_library;
-use user_library.one_hot_type.all;
+use user_library.one_hot.all;
 use user_library.binary_encoder;
-use user_library.vector_reduce.or_reduce;
+use user_library.vector_tools.or_reduce;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------

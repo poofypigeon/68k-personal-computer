@@ -2,13 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package vector_reduce is
+package vector_tools is
     function or_reduce  (vec : std_ulogic_vector) return std_ulogic;
     function and_reduce (vec : std_ulogic_vector) return std_ulogic;
     
-end package vector_reduce;
+    function to_string (vec : std_ulogic_vector) return string;
+end package vector_tools;
 
-package body vector_reduce is
+package body vector_tools is
     function or_reduce (vec : std_ulogic_vector) return std_ulogic is
         variable result: std_ulogic;
     begin
@@ -37,19 +38,6 @@ package body vector_reduce is
         return result;
     end and_reduce;
 
-end package body vector_reduce;
-
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-package vector_string is
-    function to_string (vec : std_ulogic_vector) return string;
-    
-end package vector_string;
-
-package body vector_string is
     function to_string (vec : std_ulogic_vector) return string is
         variable result : string (vec'length - 1 downto 0) := (others => NUL);
         begin
@@ -59,4 +47,4 @@ package body vector_string is
         return result;
     end function;
 
-end package body vector_string;
+end package body vector_tools;

@@ -197,7 +197,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library user_library;
-use user_library.one_hot_type.all;
+use user_library.one_hot.all;
 --+--------------------------------------------------------------------------------------------
 --| Assembles the discrete elements which comprise the Pseudo Least Recently Used policy into
 --| a usable component.

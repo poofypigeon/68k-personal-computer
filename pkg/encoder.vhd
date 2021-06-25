@@ -2,8 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.one_hot_type.all;
-use work.vector_reduce.or_reduce;
+use work.one_hot.all;
+use work.vector_tools.or_reduce;
 
 entity binary_encoder is
     generic ( output_width : positive );

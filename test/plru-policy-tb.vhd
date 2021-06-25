@@ -2,6 +2,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
+library user_library;
+use user_library.one_hot.all;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------
@@ -14,8 +17,8 @@ architecture plru_policy_tb_arch of plru_policy_tb is
 
     signal clk : std_ulogic := '0';
 
-    signal toggle_in   : std_ulogic_vector(0 to 15);
-    signal replace_out : std_ulogic_vector(0 to 15);
+    signal toggle_in        : std_ulogic_vector(0 to 15);
+    signal block_to_replace : one_hot(0 to 15);
 
 begin
     UUT : entity work.plru_policy
@@ -24,7 +27,7 @@ begin
             clk => clk,
 
             toggle_in   => toggle_in,
-            replace_out => replace_out
+            block_to_replace => block_to_replace
         );
 
     clk <= not clk after period / 2;
@@ -44,26 +47,26 @@ begin
     begin
         -- initialize to state of 0
         wait for 1 ns;
-        assert one_hot_to_int(replace_out) = 0
-        report "FAILED: initialize to state of 0, got: " & integer'image(one_hot_to_int(replace_out)) severity error;
+        assert to_integer(block_to_replace) = 0
+        report "FAILED: initialize to state of 0, got: " & integer'image(to_integer(block_to_replace)) severity error;
 
         i := 0;
         while not endfile(stimulus_file) loop
             read(stimulus_file, temp_stimulus.toggle_bit);
             read(stimulus_file, temp_stimulus.resulting_state);
 
-            toggle_in <= (temp_stimulus.toggle_bit => '1', others => '0');
+            toggle_in <= to_one_hot(temp_stimulus.toggle_bit, 16);
             wait until falling_edge(clk);
 
-            assert one_hot_to_int(replace_out) = temp_stimulus.resulting_state
-            report "FAILED: at stim " & integer'image(i) & " with replace_out = " 
-                 & integer'image(one_hot_to_int(replace_out))
+            assert to_integer(block_to_replace) = temp_stimulus.resulting_state
+            report "FAILED: at stim " & integer'image(i) & " with block_to_replace = " 
+                 & integer'image(to_integer(block_to_replace))
             severity error;
 
             -- verbose report
             report integer'image(i) & "; " 
-            & integer'image(one_hot_to_int(toggle_in)) & "; " 
-            & integer'image(one_hot_to_int(replace_out));
+            & integer'image(to_integer(toggle_in)) & "; " 
+            & integer'image(to_integer(block_to_replace));
 
             i := i + 1;
         end loop;
