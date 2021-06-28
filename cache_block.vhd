@@ -3,8 +3,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library user_library;
-use user_library.d_type_register;
+library userlib;
+use userlib.d_type_register;
 --+--------------------------------------------------------------------------------------------
 --| A paramentric cache block responsible for keeping track of tags which currently are 
 --| represented in a larger cache set.

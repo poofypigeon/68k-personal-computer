@@ -3,8 +3,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library user_library;
-use user_library.t_flip_flop;
+library userlib;
+use userlib.t_flip_flop;
 --+--------------------------------------------------------------------------------------------
 --| Root node which sits at the root of the Pseudo Least Recently Used binary tree structure. 
 --| ---
@@ -47,8 +47,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library user_library;
-use user_library.t_flip_flop;
+library userlib;
+use userlib.t_flip_flop;
 --+--------------------------------------------------------------------------------------------
 --| Node which is structurally connected to each recursive iteration of the Pseudo Least
 --| Recently Used binary tree. 
@@ -196,8 +196,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library user_library;
-use user_library.one_hot.all;
+library userlib;
+use userlib.one_hot.all;
 --+--------------------------------------------------------------------------------------------
 --| Assembles the discrete elements which comprise the Pseudo Least Recently Used policy into
 --| a usable component.

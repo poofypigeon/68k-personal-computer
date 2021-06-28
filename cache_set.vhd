@@ -3,10 +3,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library user_library;
-use user_library.one_hot.all;
-use user_library.binary_encoder;
-use user_library.vector_tools.or_reduce;
+library userlib;
+use userlib.one_hot.all;
+use userlib.binary_encoder;
+use userlib.vector_tools.or_reduce;
 --+---------------------------------------------------------------------------------------------
 --|
 --+---------------------------------------------------------------------------------------------

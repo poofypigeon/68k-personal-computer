@@ -3,9 +3,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library user_library;
-use user_library.one_hot.all;
-use user_library.vector_tools.and_reduce;
+library userlib;
+use userlib.one_hot.all;
+use userlib.vector_tools.and_reduce;
 --+---------------------------------------------------------------------------------------------
 --| Cascading logic to sequentially fill all blocks in a set with valid data before turning 
 --| block replacement control over to the primary replacement policy.

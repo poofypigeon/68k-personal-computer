@@ -1,7 +1,7 @@
-LIB_PATH = pkg/ #### CHANGE ME
+LIB_PATH = ../vhdl_userlib/ #### CHANGE ME
 
 # library dependencies
-LIB = user_library-obj93.cf
+LIB = userlib-obj93.cf
 
 # VHDL compiler
 GHDL = ghdl
