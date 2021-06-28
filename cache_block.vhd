@@ -19,11 +19,11 @@ entity cache_block is
     port (
         clk : in  std_ulogic;
 
-        tag_query   : in  unsigned(tag_bit_width - 1 downto 0);
         replace_en  : in  std_ulogic;
         reset_valid : in  std_ulogic;
         hit         : out std_ulogic;
-        is_valid    : out std_ulogic
+        is_valid    : out std_ulogic;
+        tag_query   : in  unsigned(tag_bit_width - 1 downto 0)
     );
 end cache_block;
 
@@ -34,21 +34,21 @@ end cache_block;
 --+--------------------------------------------+
 
 architecture cache_block_arch of cache_block is
-    signal stored  : std_ulogic_vector(tag_bit_width - 1 downto 0);
+    signal stored  : std_ulogic_vector(tag_bit_width - 1 downto 0) := x"00";
     signal match   : std_ulogic;
     signal valid_s : std_ulogic := '0';
 
 begin
     tag_register : entity d_type_register
-    generic map ( bit_width => tag_bit_width )
-    port map (
-        clk => clk,
-        en  => replace_en,
-        d   => std_ulogic_vector(tag_query),
-        q   => stored
-    );
+        generic map ( bit_width => tag_bit_width )
+        port map (
+            clk => clk,
+            en  => replace_en,
+            d   => std_ulogic_vector(tag_query),
+            q   => stored
+        );
 
-    match <= '1' when tag_query = unsigned(stored)
+    match <= '1' when std_ulogic_vector(tag_query) = stored
         else '0';
     hit   <=   match and valid_s;
 

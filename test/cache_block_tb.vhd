@@ -44,9 +44,9 @@ begin
         replace_en  <= '1';
         -- clock pulse
         clk <= '0';
-        wait for period/2;
+        wait for period / 2;
         clk <= '1';
-        wait for period/2;
+        wait for period / 2;
         clk <= '0';
 
         -- assert that valid bit is set when new tag is loaded

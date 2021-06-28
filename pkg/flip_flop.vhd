@@ -19,7 +19,7 @@ architecture d_flip_flop_arch of d_flip_flop is
 begin
     load : process(clk)
     begin
-        if rising_edge(clk) and en = '1' then
+        if rising_edge(clk) and (en = '1') then
             q <= d;
         end if;
     end process load;
@@ -75,8 +75,8 @@ entity d_type_register is
         clk : in  std_ulogic;
 
         en  : in  std_ulogic; -- input enable
-        d   : in  std_ulogic_vector(bit_width downto 0); -- data in
-        q   : out std_ulogic_vector(bit_width downto 0)  -- data out
+        d   : in  std_ulogic_vector(bit_width - 1 downto 0); -- data in
+        q   : out std_ulogic_vector(bit_width - 1 downto 0)  -- data out
     );
 end d_type_register;
 

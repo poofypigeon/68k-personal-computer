@@ -62,7 +62,6 @@ $(WORK)-obj93.cf : $(FILES)
 	if [[ $$SUCCESS -eq 1 ]]; then exit 1; fi;
 	@echo "Analysis finished : $(WORK)-obj93.cf";
 
-# still don't like typing
 run :
 ifeq ($(strip $(UNIT)), )
 	@echo "UNIT not found. Use UNIT=<value>."
@@ -70,9 +69,7 @@ ifeq ($(strip $(UNIT)), )
 endif
 	$(GHDL) --elab-run $(UNIT)_tb --fst=out.fst --assert-level=error
 
-# ooooh squeaky clean
 clean :
 	@if [ -f out.fst ]; then rm out.fst; fi
 	@if [ -f *.cf ]; then rm *.cf; fi
-	@if [ -f **/*.cf ]; then rm **/*.cf; fi
 
