@@ -56,4 +56,5 @@ endif
 
 clean :
 	@if [ -f out.fst ]; then rm out.fst; fi
+	@if [ -f out.fst.hier ]; then rm out.fst.hier; fi
 	@if [ -f *.cf ]; then rm *.cf; fi
