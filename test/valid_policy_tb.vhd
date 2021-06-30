@@ -20,7 +20,7 @@ architecture valid_policy_tb_arch of valid_policy_tb is
 
 begin
     UUT : entity work.valid_policy 
-        generic map ( output_bundle_width => 16 )
+        generic map ( block_count => 16 )
         port map (
             all_blocks_valid => all_blocks_valid, 
             valid_blocks     => valid_blocks,

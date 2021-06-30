@@ -19,6 +19,7 @@ architecture plru_policy_tb_arch of plru_policy_tb is
     signal block_to_replace : one_hot(0 to 15);
 
     shared variable clk_enable : integer := 1;
+    
 begin
     UUT : entity work.plru_policy
         generic map (height => 4)
@@ -44,7 +45,7 @@ begin
         file stimulus_file : text 
             open read_mode is "test/stimulus/plru.stim";
 
-        variable i             : integer;
+        variable i : integer := 0;
         variable temp_stimulus : stimulus;
     begin
         -- initialize to state of 0
@@ -52,7 +53,6 @@ begin
         assert to_integer(block_to_replace) = 0
         report "FAILED: initialize to state of 0, got: " & integer'image(to_integer(block_to_replace)) severity error;
 
-        i := 0;
         while not endfile(stimulus_file) loop
             readline(stimulus_file, instance);
             read(instance, temp_stimulus.toggle_bit);
@@ -67,8 +67,8 @@ begin
             severity error;
 
             -- -- verbose report
-            -- report integer'image(i) & "; " 
-            -- & integer'image(to_integer(toggle_in)) & "; " 
+            -- report integer'image(i)                          & "; " 
+            -- & integer'image(to_integer(toggle_in))           & "; " 
             -- & integer'image(to_integer(block_to_replace));
 
             i := i + 1;
