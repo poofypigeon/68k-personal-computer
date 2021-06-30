@@ -45,7 +45,7 @@ begin
         file stimulus_file : text 
             open read_mode is "test/stimulus/plru.stim";
 
-        variable i : integer := 0;
+        variable i : integer := 1;
         variable temp_stimulus : stimulus;
     begin
         -- initialize to state of 0
