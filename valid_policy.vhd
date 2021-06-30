@@ -23,17 +23,17 @@ use userlib.vector_tools.and_reduce;
 --|         of more gates.
 --+---------------------------------------------------------------------------------------------
 entity valid_policy is
-    generic ( output_bundle_width : positive );
+    generic ( block_count : positive );
     port (
         all_blocks_valid : out std_ulogic;
-        valid_blocks     : in  std_ulogic_vector(0 to output_bundle_width - 1);
-        block_to_replace : out one_hot(0 to output_bundle_width - 1)
+        valid_blocks     : in  std_ulogic_vector(0 to block_count - 1);
+        block_to_replace : out one_hot(0 to block_count - 1)
     );
 end valid_policy;
 
 architecture valid_policy_arch of valid_policy is
 begin
-    priority : for i in 0 to output_bundle_width - 1 generate
+    priority : for i in 0 to block_count - 1 generate
         first_bit : if i = 0 generate
             block_to_replace(i) <= not valid_blocks(i);
         end generate first_bit;
