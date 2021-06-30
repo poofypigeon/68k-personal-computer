@@ -25,6 +25,7 @@ FILES = cache_block.vhd 																		\
 		plru_policy.vhd 																		\
 		cache_set.vhd																			\
 		test/cache_block_tb.vhd																	\
+		test/cache_set_tb.vhd																	\
 		test/plru_policy_tb.vhd																	\
 		test/valid_policy_tb.vhd
 
@@ -52,7 +53,7 @@ ifeq ($(strip $(UNIT)), )
 	@echo "UNIT not found. Use UNIT=<value>."
 	@exit 1;
 endif
-	$(GHDL) --elab-run -P=$(LIB_PATH) $(UNIT)_tb --fst=out.fst --assert-level=error
+	$(GHDL) --elab-run -P=$(LIB_PATH) $(UNIT)_tb --fst=out.fst
 
 clean :
 	@if [ -f out.fst ]; then rm out.fst; fi
