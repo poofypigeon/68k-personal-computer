@@ -34,7 +34,7 @@ end cache_block;
 --+--------------------------------------------+
 
 architecture cache_block_arch of cache_block is
-    signal stored  : std_ulogic_vector(tag_bit_width - 1 downto 0) := x"00";
+    signal stored  : std_ulogic_vector(tag_bit_width - 1 downto 0) := (others => '0');
     signal match   : std_ulogic;
     signal valid_s : std_ulogic := '0';
 
