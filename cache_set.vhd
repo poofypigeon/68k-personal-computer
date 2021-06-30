@@ -7,9 +7,9 @@ library userlib;
 use userlib.one_hot.all;
 use userlib.binary_encoder;
 use userlib.vector_tools.or_reduce;
---+---------------------------------------------------------------------------------------------
+--+--------------------------------------------------------------------------------------------
 --|
---+---------------------------------------------------------------------------------------------
+--+--------------------------------------------------------------------------------------------
 entity cache_set is
     generic (
         tag_bit_width      : positive;
@@ -56,7 +56,7 @@ begin
     end generate gen_blocks;
     
     init_policy : entity work.valid_policy
-        generic map ( output_bundle_width => block_id_bit_width )
+        generic map ( block_count => block_count )
         port map (
             all_blocks_valid => all_blocks_valid_s,
             valid_blocks     => valid_blocks_s,
