@@ -1,10 +1,15 @@
 from random import randint
 from plru_stim_gen import plru_tree
 
+global tag_bit_width
+tag_bit_width = 8
+global block_id_bit_width
+block_id_bit_width = 4
+
 def gen_queries(min, max):
     addresses = []
     for _ in range(24):
-        addresses.append(randint(min, max))
+        addresses.append(randint(min, max - 1))
 
     queries = []
     for _ in range(128):
@@ -13,14 +18,12 @@ def gen_queries(min, max):
     return queries
 
 if __name__ == "__main__":
-    height = 4
-
     block_list = []
-    for i in range(2 ** height):
+    for i in range(2 ** block_id_bit_width):
         block_list.append(0)
         
-    tree = plru_tree(height = height)
-    queries = gen_queries(0, 256)
+    tree = plru_tree(height = block_id_bit_width)
+    queries = gen_queries(0, 2 ** tag_bit_width)
     valid_iterator = iter(block_list)
 
     with open("../stimulus/set.stim", 'w') as file:
@@ -49,8 +52,5 @@ if __name__ == "__main__":
                 finally:
                     query_hit = 0
 
-                block_list[block_id] = query
-                tree.toggle(block_id)
-
-            print("set_is_selected: %d ; query: %-3d ; query_hit: %d ; hit_block_id: %-2d" % (set_is_selected, query, query_hit, block_id))
+            print("set_is_selected: %d ; tag_query: %-3d ; query_hit: %d ; hit_block_id: %-2d" % (set_is_selected, query, query_hit, block_id))
             file.write("%d %-3d %d %-2d\n" % (set_is_selected, query, query_hit, block_id))
